@@ -18,7 +18,7 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
     private suspend fun initializeNewOptions(newOptions: List<DebugOption>) {
         newOptions.forEach {
             when (it) {
-                is Action -> { /* no op*/ }
+                is Action -> { /* no op */ }
                 is Toggle -> {
                     state.persistence.apply {
                         if (readValue<Boolean>(it.key) == null) {
@@ -36,10 +36,10 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
 
     suspend fun show(menu: String = DEBUG_GLOBAL_MENU) {
         if (!hasSetPassword()) {
-            state.display?.displayCodeEntry()
+            state.display.displayCodeEntry()
             return
         }
-        state.display?.displayMenu(state.title, state.options[menu]!!)
+        state.display.displayMenu(state.title, state.options[menu]!!)
     }
 
     private suspend fun hasSetPassword(): Boolean {
