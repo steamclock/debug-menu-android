@@ -5,10 +5,12 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.steamclock.debugmenu.*
@@ -50,12 +52,13 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun DebugMenuSample(showSecretText: Boolean, altButtonText: Boolean, altButtonColour: Boolean) {
     val coroutineScope = rememberCoroutineScope()
-    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(16.dp)) {
         if (showSecretText) {
             Text("Secret Text!")
         }
         val colors = ButtonDefaults.buttonColors(
-            backgroundColor = if (altButtonColour) Color.Red else Color.Blue
+            backgroundColor = if (altButtonColour) Color.Red else Color.Green
         )
         Button(
             colors = colors,
@@ -65,7 +68,7 @@ fun DebugMenuSample(showSecretText: Boolean, altButtonText: Boolean, altButtonCo
             }
         }) {
             val text = if (altButtonText) {
-                "Alt Debug Menu Text"
+                "Reveal Debug Menu"
             } else {
                 "Show Debug Menu"
             }
