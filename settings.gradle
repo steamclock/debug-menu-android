@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "debugmenu"
 include ':debugmenu'
+include ':debugmenu-ui'
