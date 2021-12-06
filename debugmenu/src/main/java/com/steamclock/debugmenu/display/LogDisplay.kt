@@ -1,4 +1,6 @@
-package com.steamclock.debugmenu
+package com.steamclock.debugmenu.display
+
+import com.steamclock.debugmenu.*
 
 /**
  * debugmenu

@@ -1,4 +1,4 @@
-package com.steamclock.debugmenu
+package com.steamclock.debugmenu.persistence
 
 import kotlinx.coroutines.flow.Flow
 
@@ -12,10 +12,11 @@ interface DebugMenuPersistence {
     fun <T: Any> flowValue(keyName: String, type: Class<T>): Flow<T>
 }
 
+// Convenience functions for dealing with generics
+
 suspend inline fun <reified T: Any> DebugMenuPersistence.readValue(keyName: String, type: Class<T> = T::class.java): T? {
     return readValue(keyName, type)
 }
-
 
 inline fun <reified T: Any> DebugMenuPersistence.flowValue(keyName: String, type: Class<T> = T::class.java): Flow<T> {
     return flowValue(keyName, type)

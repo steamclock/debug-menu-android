@@ -1,4 +1,4 @@
-package com.steamclock.debugmenu
+package com.steamclock.debugmenu.persistence
 
 import kotlinx.coroutines.flow.*
 
