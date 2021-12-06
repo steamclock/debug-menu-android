@@ -17,7 +17,9 @@ import kotlinx.coroutines.runBlocking
  */
 private const val longClickDuration = 3000L
 
-fun View.showOnGesture(menuKey: String) {
+// Adds a gesture handler to an Android View
+fun View.showOnGesture(menuKey: String,
+                       longPressDuration: Long = longClickDuration) {
     var clickTime = 0L
 
     setOnTouchListener { view, event ->
@@ -27,7 +29,7 @@ fun View.showOnGesture(menuKey: String) {
                 true
             }
             MotionEvent.ACTION_UP -> {
-                if ((System.currentTimeMillis() - clickTime) > longClickDuration) {
+                if ((System.currentTimeMillis() - clickTime) > longPressDuration) {
                     runBlocking {
                         DebugMenu.instance.show(menuKey)
                     }
@@ -42,10 +44,13 @@ fun View.showOnGesture(menuKey: String) {
     }
 }
 
-// note that if you're using this class on a clickable element, this
+// A modifier we can add to a compose component to add the long-press gesture.
+// Note that if you're using this class on a clickable element, this
 // will override the normal onClick method
 @OptIn(ExperimentalComposeUiApi::class)
-fun Modifier.showOnGesture(menuKey: String = DebugMenu.DEBUG_GLOBAL_MENU, onClick: (() -> Unit)? = null) = composed(
+fun Modifier.showOnGesture(menuKey: String = DebugMenu.DEBUG_GLOBAL_MENU,
+                           longPressDuration: Long = longClickDuration,
+                           onClick: (() -> Unit)? = null) = composed(
     inspectorInfo = {
         name = "Debug Gesture"
     },
@@ -58,7 +63,7 @@ fun Modifier.showOnGesture(menuKey: String = DebugMenu.DEBUG_GLOBAL_MENU, onClic
                     true
                 }
                 MotionEvent.ACTION_UP -> {
-                    if ((System.currentTimeMillis() - clickTime.value) > longClickDuration) {
+                    if ((System.currentTimeMillis() - clickTime.value) > longPressDuration) {
                         runBlocking {
                             DebugMenu.instance.show(menuKey)
                         }
