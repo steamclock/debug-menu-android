@@ -9,6 +9,7 @@ import com.steamclock.debugmenu_ui.ComposeDebugMenuDisplay
  * debugmenu
  * Created by jake on 2021-12-06, 10:24 a.m.
  */
+@Suppress("unused")
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
