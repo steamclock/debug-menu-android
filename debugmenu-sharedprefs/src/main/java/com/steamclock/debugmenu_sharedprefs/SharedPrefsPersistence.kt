@@ -13,12 +13,18 @@ import kotlinx.coroutines.flow.map
  * debugmenu
  * Created by jake on 2021-12-03, 1:08 p.m.
  */
-class SharedPrefsPersistence(private val context: Context, preferenceTitle: String = "debug_menu"): DebugMenuPersistence {
+class SharedPrefsPersistence(private var context: Context, preferenceTitle: String = "debug_menu"): DebugMenuPersistence {
+    init {
+        // always use app context
+        context = context.applicationContext
+    }
+
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = preferenceTitle)
     private val preferenceKeys: MutableMap<String, Preferences.Key<Any>> = mutableMapOf()
     private val preferenceFlows: MutableMap<String, Flow<Any?>> = mutableMapOf()
 
     private fun <T: Any> createPreferenceKey(keyName: String, type: Class<T>): Preferences.Key<T> {
+
         val key = when (type) {
             String::class.java -> stringPreferencesKey(keyName)
             Int::class.javaObjectType -> intPreferencesKey(keyName)
