@@ -14,9 +14,7 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         DebugMenu.initialize("123321",
-            ComposeDebugMenuDisplay().apply {
-                attach(this@App)
-            },
+            ComposeDebugMenuDisplay(this),
             SharedPrefsPersistence(this)
         )
     }
