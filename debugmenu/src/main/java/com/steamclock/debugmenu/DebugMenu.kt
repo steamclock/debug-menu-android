@@ -13,6 +13,7 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
     suspend fun addOptions(menuKey: String, vararg newOptions: DebugOption) {
         val previousOptions = state.options.toMutableMap()
         val previousOptionsMenu = previousOptions[menuKey]?.toMutableList() ?: mutableListOf()
+        // TODO: 2021-12-08 check for duplicates based on menuKey and option title
         initializeNewOptions(newOptions.toList())
         previousOptionsMenu.addAll(newOptions)
         previousOptions[menuKey] = previousOptionsMenu
