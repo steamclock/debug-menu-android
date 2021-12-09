@@ -1,6 +1,7 @@
 package com.steamclock.debugmenusample
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -16,17 +17,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.steamclock.debugmenu.Action
-import com.steamclock.debugmenu.DebugMenu
-import com.steamclock.debugmenu.addOptions
-import com.steamclock.debugmenu.generated.*
+import com.steamclock.debugmenu.generated.ButtonMenu
+import com.steamclock.debugmenu.generated.GlobalDebugMenu
+import com.steamclock.debugmenu.generated.TestingMenu
+import com.steamclock.debugmenu.generated.initDebugMenus
+import com.steamclock.debugmenu_annotation.DebugAction
 import com.steamclock.debugmenu_annotation.DebugToggle
 import com.steamclock.debugmenu_ui.showOnGesture
 import com.steamclock.debugmenusample.ui.theme.DebugmenuTheme
-import kotlinx.coroutines.runBlocking
 
-@DebugToggle(title = "Enable testing")
-class GlobalTempToggle
+@DebugToggle(title = "Enable easy debug menu")
+class EasyDebugMenuToggle
+
+@DebugAction(title = "Global action", menuKey = "TestingMenu")
+fun doGlobalAction() {
+    Log.d("TAG", "doGobalAction: ")
+}
 
 class MainActivity : AppCompatActivity() {
     @DebugToggle(title = "Show secret text", menuKey = "TestingMenu")
@@ -38,25 +44,30 @@ class MainActivity : AppCompatActivity() {
     @DebugToggle(title = "Alt Button Colour", menuKey = "ButtonMenu")
     class AltButtonColourToggle
 
+    @DebugAction(title = "Buttons Menu", menuKey = "TestingMenu")
+    fun showButtonsMenu() {
+        ButtonMenu.show()
+    }
+
+    @DebugAction(title = "Show Testing Menu")
+    fun showTestingMenu() {
+        TestingMenu.show()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        runBlocking {
-            DebugMenu.instance.addOptions(menuKey = TestingMenu.key, Action("Buttons Menu") {
-                ButtonMenu.show()
-            })
 
-            DebugMenu.instance.addOptions(Action("Show Testing Menu") {
-                TestingMenu.show()
-            })
-        }
+        initDebugMenus()
 
         setContent {
             DebugmenuTheme {
                 Surface(color = MaterialTheme.colors.background) {
+                    val easyDebugMenuToggle = GlobalDebugMenu.EasyDebugMenuToggle.flow.collectAsState(initial = false)
                     val showSecretText = TestingMenu.ShowSecretTextToggle.flow.collectAsState(initial = false)
                     val useAltButtonText = ButtonMenu.AltButtonTextToggle.flow.collectAsState(initial = false)
                     val useAltButtonColour = ButtonMenu.AltButtonColourToggle.flow.collectAsState(initial = false)
                     DebugMenuSample(
+                        easyDebugMenuToggle = easyDebugMenuToggle.value,
                         showSecretText = showSecretText.value,
                         altButtonText = useAltButtonText.value,
                         altButtonColour = useAltButtonColour.value)
@@ -67,20 +78,21 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun DebugMenuSample(showSecretText: Boolean, altButtonText: Boolean, altButtonColour: Boolean) {
+fun DebugMenuSample(easyDebugMenuToggle: Boolean, showSecretText: Boolean, altButtonText: Boolean, altButtonColour: Boolean) {
     val context = LocalContext.current
     Column(verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.padding(16.dp)) {
         val colors = ButtonDefaults.buttonColors(
             backgroundColor = if (altButtonColour) Color.Red else Color.Green
         )
+        val seconds = if (easyDebugMenuToggle) 1 else 3
         fun buttonClicked() {
-            Toast.makeText(context, "Long Click For 3 Seconds", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Long Click For $seconds Seconds", Toast.LENGTH_SHORT).show()
         }
         Button(
             colors = colors,
             onClick = { buttonClicked() },
-            modifier = Modifier.showOnGesture(onClick = { buttonClicked() }),
+            modifier = Modifier.showOnGesture(longPressDuration = 1000L * seconds, onClick = { buttonClicked() }),
         ) {
             val text = if (altButtonText) {
                 "Reveal Debug Menu"
@@ -93,8 +105,8 @@ fun DebugMenuSample(showSecretText: Boolean, altButtonText: Boolean, altButtonCo
             AndroidView(factory = {
                 TextView(context)
             }, update = {
-                it.text = "3 second long press for menu2!"
-                it.showOnGesture(ButtonMenu.key)
+                it.text = "$seconds second long press for menu2!"
+                it.showOnGesture(ButtonMenu.key, longPressDuration = 1000L * seconds)
             })
         }
     }
