@@ -116,7 +116,6 @@ class FileGenerator : AbstractProcessor() {
             }
 
             initializationFunctions[it]?.add(initializations.first)
-            processingEnv.messager.printMessage(Diagnostic.Kind.WARNING, "inits = $initializationFunctions")
         }
 
         initializationFunctions.keys.forEach { parentPackage ->
