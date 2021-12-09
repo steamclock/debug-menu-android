@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -48,6 +49,9 @@ android {
 }
 
 dependencies {
+    implementation project(':debugmenu-annotation')
+    kapt project(':debugmenu-codegen')
+
     implementation project(":debugmenu-ui")
     implementation project(":debugmenu-sharedprefs")
     implementation project(":debugmenu")

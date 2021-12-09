@@ -16,31 +16,46 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.steamclock.debugmenu.*
+import com.steamclock.debugmenu.Action
+import com.steamclock.debugmenu.DebugMenu
+import com.steamclock.debugmenu.addOptions
+import com.steamclock.debugmenu.generated.*
+import com.steamclock.debugmenu_annotation.DebugToggle
 import com.steamclock.debugmenu_ui.showOnGesture
 import com.steamclock.debugmenusample.ui.theme.DebugmenuTheme
 import kotlinx.coroutines.runBlocking
 
+@DebugToggle(title = "Enable testing")
+class GlobalTempToggle
+
 class MainActivity : AppCompatActivity() {
+    @DebugToggle(title = "Show secret text", menuKey = "TestingMenu")
+    class ShowSecretTextToggle
+
+    @DebugToggle(title = "Alt Button Text", menuKey = "ButtonMenu")
+    class AltButtonTextToggle
+
+    @DebugToggle(title = "Alt Button Colour", menuKey = "ButtonMenu")
+    class AltButtonColourToggle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         runBlocking {
-            DebugMenu.instance.addOptions(Toggle("Show secret text", key = "show secret text"))
-            DebugMenu.instance.addOptions(Action("Buttons Menu") {
-                DebugMenu.instance.show("menu2")
+            DebugMenu.instance.addOptions(menuKey = TestingMenu.key, Action("Buttons Menu") {
+                ButtonMenu.show()
             })
-            DebugMenu.instance.addOptions("menu2",
-                Toggle("Alt Button Text", key = "alt button text"),
-                Toggle("Alt Button Colour", key = "alt button color")
-            )
+
+            DebugMenu.instance.addOptions(Action("Show Testing Menu") {
+                TestingMenu.show()
+            })
         }
 
         setContent {
             DebugmenuTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    val showSecretText = DebugMenu.instance.flow<Boolean>("show secret text").collectAsState(initial = false)
-                    val useAltButtonText = DebugMenu.instance.flow<Boolean>("alt button text").collectAsState(initial = false)
-                    val useAltButtonColour = DebugMenu.instance.flow<Boolean>("alt button color").collectAsState(initial = false)
+                    val showSecretText = TestingMenu.ShowSecretTextToggle.flow.collectAsState(initial = false)
+                    val useAltButtonText = ButtonMenu.AltButtonTextToggle.flow.collectAsState(initial = false)
+                    val useAltButtonColour = ButtonMenu.AltButtonColourToggle.flow.collectAsState(initial = false)
                     DebugMenuSample(
                         showSecretText = showSecretText.value,
                         altButtonText = useAltButtonText.value,
@@ -79,7 +94,7 @@ fun DebugMenuSample(showSecretText: Boolean, altButtonText: Boolean, altButtonCo
                 TextView(context)
             }, update = {
                 it.text = "3 second long press for menu2!"
-                it.showOnGesture("menu2")
+                it.showOnGesture(ButtonMenu.key)
             })
         }
     }
