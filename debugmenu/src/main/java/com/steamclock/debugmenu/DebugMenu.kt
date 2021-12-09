@@ -46,8 +46,8 @@ class DebugMenu private constructor(private val code: String) {
         state.display.displayMenu(state.title, state.options[menu]!!)
     }
 
-    private suspend fun hasSetPassword(): Boolean {
-        val enteredCode = value<String>(DEBUG_MENU_CODE_KEY)
+    private fun hasSetPassword(): Boolean {
+        val enteredCode = valueBlocking<String>(DEBUG_MENU_CODE_KEY)
         return enteredCode == code
     }
 
