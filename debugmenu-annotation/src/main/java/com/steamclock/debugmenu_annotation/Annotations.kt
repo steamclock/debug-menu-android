@@ -17,4 +17,4 @@ annotation class DebugToggle(val title: String, val defaultValue: Boolean = fals
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 @MustBeDocumented
-annotation class DebugAction(val title: String)
+annotation class DebugAction(val title: String, val menuKey: String = "")
