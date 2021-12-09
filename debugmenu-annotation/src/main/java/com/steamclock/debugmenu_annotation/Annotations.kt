@@ -12,7 +12,7 @@ annotation class DebugMenuApp
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
 @MustBeDocumented
-annotation class DebugToggle(val title: String, val defaultValue: Boolean = false)
+annotation class DebugToggle(val title: String, val defaultValue: Boolean = false, val menuKey: String = "")
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
