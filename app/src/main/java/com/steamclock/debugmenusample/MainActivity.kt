@@ -31,7 +31,7 @@ class EasyDebugMenuToggle
 
 @DebugAction(title = "Global action", menuKey = "TestingMenu")
 fun doGlobalAction() {
-    Log.d("TAG", "doGobalAction: ")
+    Log.d("TAG", "doGlobalAction: ")
 }
 
 class MainActivity : AppCompatActivity() {
