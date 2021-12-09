@@ -2,40 +2,33 @@ package com.steamclock.codegen
 
 internal class MenuClassBuilder(private val menuKey: String, private val menuName: String, private val options: List<AnnotationWrapper>) {
     private val optionsText: String
-        get() {
-            var string = ""
-            for (option in options) {
-                when (option) {
-                    is ActionWrapper -> {
-                        if (option.isGlobal) {
-                            val actionText = "Action(title = \"${option.title}\", onClick = { ${option.functionName}() })"
-                            string += "DebugMenu.instance.addOptions(\"$menuKey\", $actionText)\n\t"
-                        }
-                    }
-                    is ToggleWrapper -> {
-                        val toggle = option.toggle
-                        val toggleText = "Toggle(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
-                        string += "DebugMenu.instance.addOptions(\"$menuKey\", $toggleText)\n\t"
+        get() = options.joinToString("\n") { option ->
+            when (option) {
+                is ActionWrapper -> {
+                    if (option.isGlobal) {
+                        val actionText = "Action(title = \"${option.title}\", onClick = { ${option.functionName}() })"
+                        "DebugMenu.instance.addOptions(\"$menuKey\", $actionText)"
+                    } else {
+                        ""
                     }
                 }
+                is ToggleWrapper -> {
+                    val toggle = option.toggle
+                    val toggleText = "Toggle(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                    "DebugMenu.instance.addOptions(\"$menuKey\", $toggleText)"
+                }
             }
-            return string
         }
 
     private val debugValues: String
-        get() {
-            var string = ""
-            for (option in options) {
-                when (option) {
-                    is ActionWrapper -> { /* no op */ }
-                    is ToggleWrapper -> {
-                        val toggle = option.toggle
-                        val toggleText = "val ${toggle.key} = DebugValue<Boolean>(DebugMenu.instance.flow(\"${toggle.key}\"))\n\t"
-                        string += toggleText
-                    }
+        get() = options.joinToString("\n") {
+            when (it) {
+                is ActionWrapper -> { "" }
+                is ToggleWrapper -> {
+                    val toggle = it.toggle
+                    "val ${toggle.key} = DebugValue<Boolean>(DebugMenu.instance.flow(\"${toggle.key}\"))"
                 }
             }
-            return string
         }
 
     private val globalActionImports: String
@@ -100,7 +93,6 @@ fun initialize(parent: $parentName) = runBlocking {
     private val contentTemplate = """
 package com.steamclock.debugmenu.generated
 
-import android.view.View
 import com.steamclock.debugmenu.*
 import kotlinx.coroutines.runBlocking
 import com.steamclock.debugmenu_annotation.DebugValue
