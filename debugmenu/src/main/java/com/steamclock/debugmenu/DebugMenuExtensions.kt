@@ -33,5 +33,6 @@ suspend fun DebugMenu.addOptions(vararg newOptions: DebugOption) {
     addOptions(DebugMenu.DEBUG_GLOBAL_MENU, *newOptions)
 }
 
-fun String.sha256(): ByteArray = MessageDigest.getInstance("SHA-256")
+fun String.sha256(): String = MessageDigest.getInstance("SHA-256")
     .digest(this.toByteArray(StandardCharsets.UTF_8))
+    .fold("", { str, it -> str + "%02x".format(it) })

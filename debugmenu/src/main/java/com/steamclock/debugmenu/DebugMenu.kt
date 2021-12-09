@@ -4,9 +4,8 @@ import com.steamclock.debugmenu.display.DebugMenuDisplay
 import com.steamclock.debugmenu.persistence.DebugMenuPersistence
 import com.steamclock.debugmenu.persistence.readValue
 import com.steamclock.debugmenu.persistence.writeValue
-import java.util.*
 
-class DebugMenu private constructor(private val code: String = UUID.randomUUID().toString()) {
+class DebugMenu private constructor(private val code: String) {
     lateinit var state: DebugMenuState
         private set
 
@@ -36,7 +35,7 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
     }
 
     suspend fun enterCode(code: String) {
-        state.persistence.writeValue(DEBUG_MENU_CODE_KEY, code)
+        state.persistence.writeValue(DEBUG_MENU_CODE_KEY, code.sha256())
     }
 
     suspend fun show(menu: String = DEBUG_GLOBAL_MENU) {
@@ -64,13 +63,13 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
                 throw RuntimeException("Call initialize before usage")
             }
 
-        fun initialize(code: String, display: DebugMenuDisplay, persistence: DebugMenuPersistence) {
+        fun initialize(encryptedCode: String, display: DebugMenuDisplay, persistence: DebugMenuPersistence) {
             val previousState = _instance?.state ?: DebugMenuState(title = "Debug Menu")
             val newState = previousState.copy(
                 display = display,
                 persistence = persistence
             )
-            _instance = DebugMenu(code)
+            _instance = DebugMenu(encryptedCode)
             _instance?.state = newState
         }
     }
