@@ -1,6 +1,6 @@
 package com.steamclock.codegen
 
-internal class MenuClassBuilder(private val menuKey: String, menuName: String, private val options: List<AnnotationWrapper>) {
+internal class MenuClassBuilder(private val menuKey: String, private val menuName: String, private val options: List<AnnotationWrapper>) {
     private val optionsText: String
         get() {
             var string = ""
@@ -75,31 +75,31 @@ internal class MenuClassBuilder(private val menuKey: String, menuName: String, p
 
     private val initFunctions: String
         get() {
-            return actionsByParents.keys.joinToString("\n") {
-                val parent = it
+            return actionsByParents.keys.joinToString("\n") { parent ->
                 val actions = actionsByParents[parent] ?: listOf()
                 val parentName = parent.split(".").last()
 
                 val actionStrings = actions.joinToString {
                     """
-                    val action = Action(title = "${it.title}", onClick = {
-                        instance.${parentName}Ref?.get()?.${it.functionName}()
-                    })
-                    DebugMenu.instance.addOptions("$menuKey", action)    
+val action = Action(title = "${it.title}", onClick = {
+    instance.${parentName}Ref?.get()?.${it.functionName}()
+})
+DebugMenu.instance.addOptions("$menuKey", action)    
                     """.trimIndent()
                 }
 
                 """
-                    fun initialize(parent: $parent) = runBlocking {
-                        instance.${parentName}Ref = WeakReference(parent)
-                        $actionStrings
-                    }
+fun initialize(parent: $parentName) = runBlocking {
+    instance.${parentName}Ref = WeakReference(parent)
+    $actionStrings
+}
                 """.trimIndent()
             }
         }
 
     private val contentTemplate = """
 package com.steamclock.debugmenu.generated
+
 import android.view.View
 import com.steamclock.debugmenu.*
 import kotlinx.coroutines.runBlocking
@@ -132,5 +132,10 @@ class $menuName private constructor() {
 
     fun getContent(): String {
         return contentTemplate
+    }
+
+    fun generatedInitFunctions(): Pair<String, List<String>> {
+        // DebugMenu -> MainActivity, SettingsActivity
+        return menuName to actionsByParents.keys.map { parent -> parent }
     }
 }

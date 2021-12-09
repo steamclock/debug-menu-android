@@ -23,6 +23,7 @@ internal data class ActionWrapper(val title: String, val functionName: String, v
 class FileGenerator : AbstractProcessor() {
     private val globalDebugKey = "GlobalDebugMenu"
     private var menus = hashMapOf<String, MutableList<AnnotationWrapper>>()
+    private val initializationFunctions = mutableMapOf<String, MutableSet<String>>()
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
         return mutableSetOf(DebugToggle::class.java.name, DebugAction::class.java.name)
@@ -93,13 +94,49 @@ class FileGenerator : AbstractProcessor() {
 
     private fun generateMenuClasses(menus: HashMap<String, MutableList<AnnotationWrapper>>) {
         runBlocking {
+
             menus.keys.forEach { menuKey ->
                 val options = menus[menuKey] ?: mutableListOf()
                 val validMenuKey = menuKey.replace(" ", "_")
                 val menuName = if (validMenuKey == DEBUG_GLOBAL_MENU) globalDebugKey else validMenuKey.capitalize()
-                val fileContents = MenuClassBuilder(validMenuKey, menuName, options).getContent()
+                val menuBuilder = MenuClassBuilder(validMenuKey, menuName, options)
+                val fileContents = menuBuilder.getContent()
+
+                generateInitializationExtensions(menuBuilder)
                 writeContents(fileContents, menuName)
             }
+        }
+    }
+
+    private fun generateInitializationExtensions(menuBuilder: MenuClassBuilder) {
+        val initializations = menuBuilder.generatedInitFunctions()
+        initializations.second.forEach {
+            if (initializationFunctions[it] == null) {
+                initializationFunctions[it] = mutableSetOf()
+            }
+
+            initializationFunctions[it]?.add(initializations.first)
+            processingEnv.messager.printMessage(Diagnostic.Kind.WARNING, "inits = $initializationFunctions")
+        }
+
+        initializationFunctions.keys.forEach { parentPackage ->
+            val parentName = parentPackage.split(".").last()
+            val debugMenuNames = initializationFunctions[parentPackage] ?: mutableSetOf()
+            if (debugMenuNames.isEmpty()) return@forEach
+            val debugMenuImports = debugMenuNames.joinToString("\n") { "import com.steamclock.debugmenu.generated.$it" }
+            val debugMenuInitCalls = debugMenuNames.map { debugMenuName -> "$debugMenuName.initialize(this)" }
+
+            val contents = """
+package com.steamclock.debugmenu.generated 
+
+import $parentPackage
+$debugMenuImports
+
+fun $parentName.initDebugMenus() {
+    ${debugMenuInitCalls.joinToString("\n")}
+}
+            """.trimIndent()
+            writeContents(contents, "${parentName}DebugMenuExtension")
         }
     }
 
