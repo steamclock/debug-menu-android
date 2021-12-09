@@ -1,10 +1,7 @@
 package com.steamclock.codegen
 
 import com.google.auto.service.AutoService
-import com.steamclock.debugmenu.Action
-import com.steamclock.debugmenu.DebugMenu
 import com.steamclock.debugmenu.DebugMenu.Companion.DEBUG_GLOBAL_MENU
-import com.steamclock.debugmenu.DebugOption
 import com.steamclock.debugmenu.Toggle
 import com.steamclock.debugmenu_annotation.DebugAction
 import com.steamclock.debugmenu_annotation.DebugToggle
@@ -60,7 +57,7 @@ class FileGenerator : AbstractProcessor() {
                 return false
             }
 
-            val name = it.simpleName.toString() // change this to camelCase
+            val name = it.simpleName.toString()
             val title = (it.getAnnotationsByType(DebugToggle::class.java)[0]).title
             val menuKey = (it.getAnnotationsByType(DebugToggle::class.java)[0]).menuKey
             val defaultValue = (it.getAnnotationsByType(DebugToggle::class.java)[0]).defaultValue
@@ -74,7 +71,6 @@ class FileGenerator : AbstractProcessor() {
                 return false
             }
 
-            val name = it.simpleName.toString() // change this to camelCase
             val title = (it.getAnnotationsByType(DebugAction::class.java)[0]).title
             val menuKey = (it.getAnnotationsByType(DebugAction::class.java)[0]).menuKey
             val functionName = it.simpleName.toString()
