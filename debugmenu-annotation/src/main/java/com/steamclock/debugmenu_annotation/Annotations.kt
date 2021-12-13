@@ -8,7 +8,7 @@ package com.steamclock.debugmenu_annotation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
 @MustBeDocumented
-annotation class DebugToggle(val title: String, val defaultValue: Boolean = false, val menuKey: String = "")
+annotation class DebugBoolean(val title: String, val defaultValue: Boolean = false, val menuKey: String = "")
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)

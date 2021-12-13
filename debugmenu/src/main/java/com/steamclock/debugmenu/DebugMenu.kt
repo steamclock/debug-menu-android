@@ -23,7 +23,7 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
         newOptions.forEach {
             when (it) {
                 is Action -> { /* no op */ }
-                is Toggle -> {
+                is BooleanValue -> {
                     state.persistence.apply {
                         if (readValue<Boolean>(it.key) == null) {
                             writeValue(it.key, it.defaultValue)
