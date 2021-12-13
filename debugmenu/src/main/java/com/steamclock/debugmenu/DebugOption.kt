@@ -10,3 +10,4 @@ data class IntValue(override val title: String, val key: String, val defaultValu
 data class DoubleValue(override val title: String, val key: String, val defaultValue: Double = 0.0): DebugOption(title)
 data class LongValue(override val title: String, val key: String, val defaultValue: Long = 0L): DebugOption(title)
 data class Action(override val title: String, val onClick: suspend () -> Unit): DebugOption(title)
+data class StringSelection(override val title: String, val key: String, val options: List<String>, val defaultIndex: Int = 0): DebugOption(title)
