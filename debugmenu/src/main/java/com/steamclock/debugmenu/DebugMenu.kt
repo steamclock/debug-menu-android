@@ -51,7 +51,7 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
                         }
                     }
                 }
-                is StringSelection -> {
+                is OptionSelection -> {
                     state.persistence.apply {
                         if (readValue<Int>(it.key) == null) {
                             writeValue(it.key, it.defaultIndex)

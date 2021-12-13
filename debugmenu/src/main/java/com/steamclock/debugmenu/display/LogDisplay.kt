@@ -21,7 +21,7 @@ class LogDisplay: DebugMenuDisplay {
                     println("   ${it.title} - ${DebugMenu.instance.valueBlocking<Int>(it.key)}")
                 is LongValue ->
                     println("   ${it.title} - ${DebugMenu.instance.valueBlocking<Long>(it.key)}")
-                is StringSelection -> {
+                is OptionSelection -> {
                     val index = DebugMenu.instance.valueBlocking(it.key) ?: it.defaultIndex
                     val value = it.options[index]
                     println("   ${it.title} - $value")

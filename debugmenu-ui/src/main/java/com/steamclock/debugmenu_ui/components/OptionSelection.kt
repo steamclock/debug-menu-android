@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.steamclock.debugmenu.DebugMenu
-import com.steamclock.debugmenu.StringSelection
+import com.steamclock.debugmenu.OptionSelection
 import com.steamclock.debugmenu.flow
 import com.steamclock.debugmenu.update
 import kotlinx.coroutines.launch
@@ -20,14 +20,14 @@ import kotlinx.coroutines.launch
  * Created by jake on 2021-12-13, 1:16 p.m.
  */
 @Composable
-fun StringSelection(option: StringSelection) {
+fun OptionSelection(selection: OptionSelection) {
     val composableScope = rememberCoroutineScope()
     val expanded = remember { mutableStateOf(false) }
-    val selectedIndex = DebugMenu.instance.flow<Int>(option.key).collectAsState(initial = option.defaultIndex)
+    val selectedIndex = DebugMenu.instance.flow<Int>(selection.key).collectAsState(initial = selection.defaultIndex)
     Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween) {
         Text(
-            option.options[selectedIndex.value],
+            selection.options[selectedIndex.value].toString(),
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = { expanded.value = true })
@@ -37,14 +37,14 @@ fun StringSelection(option: StringSelection) {
             onDismissRequest = { expanded.value = false },
             modifier = Modifier.fillMaxWidth()
         ) {
-            option.options.forEachIndexed { index, string ->
+            selection.options.forEachIndexed { index, option ->
                 DropdownMenuItem(onClick = {
                     expanded.value = false
                     composableScope.launch {
-                        DebugMenu.instance.update(option.key, index)
+                        DebugMenu.instance.update(selection.key, index)
                     }
                 }) {
-                    Text(string)
+                    Text(option.toString())
                 }
             }
         }
