@@ -29,3 +29,8 @@ annotation class DebugLong(val title: String, val defaultValue: Long = 0, val me
 @Retention(AnnotationRetention.SOURCE)
 @MustBeDocumented
 annotation class DebugDouble(val title: String, val defaultValue: Double = 0.0, val menuKey: String = "")
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.SOURCE)
+@MustBeDocumented
+annotation class DebugSelection(val title: String, val defaultIndex: Int = -1, val menuKey: String = "", val options: Array<String>)

@@ -1,5 +1,11 @@
 package com.steamclock.codegen
 
+import com.steamclock.debugmenu.DebugMenu
+import com.steamclock.debugmenu.OptionSelection
+import com.steamclock.debugmenu.flow
+import com.steamclock.debugmenu_annotation.DebugValue
+import kotlinx.coroutines.flow.mapNotNull
+
 internal class MenuClassBuilder(
     private val menuKey: String,
     private val menuName: String,
@@ -41,6 +47,13 @@ internal class MenuClassBuilder(
                         "LongValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
                     "DebugMenu.instance.addOptions(key, $toggleText)"
                 }
+                is SelectionWrapper -> {
+                    val selection = option.selectionValue
+                    val options = selection.options.joinToString(",") { "\"$it\"" }
+                    val text =
+                        "OptionSelection(title = \"${selection.title}\", key = \"${selection.key}\", options = listOf(${options}), defaultIndex = ${selection.defaultIndex})"
+                    "DebugMenu.instance.addOptions(key, $text)"
+                }
             }
         }
 
@@ -65,6 +78,15 @@ internal class MenuClassBuilder(
                 is LongWrapper -> {
                     val toggle = it.longValue
                     "val ${toggle.key} = DebugValue<Long>(DebugMenu.instance.flow(\"${toggle.key}\"))"
+                }
+                is SelectionWrapper -> {
+                    val toggle = it.selectionValue
+"""
+        val ${toggle.key} = DebugValue<String>(DebugMenu.instance.flow<Int>("${toggle.key}").mapNotNull {
+            val option = (DebugMenu.instance.optionForKey("${toggle.key}") as? OptionSelection) ?: return@mapNotNull null
+            option.options[it]
+        })
+"""
                 }
             }
         }
@@ -110,7 +132,7 @@ internal class MenuClassBuilder(
                 val actions = actionsByParents[parent] ?: listOf()
                 val parentName = parent.split(".").last()
 
-                val actionStrings = actions.joinToString() {
+                val actionStrings = actions.joinToString {
                     """
             val action = Action(title = "${it.title}", onClick = {
                 instance.${parentName}Ref?.get()?.${it.functionName}()
@@ -135,6 +157,7 @@ import com.steamclock.debugmenu.*
 import kotlinx.coroutines.runBlocking
 import com.steamclock.debugmenu_annotation.DebugValue
 import java.lang.ref.WeakReference
+import kotlinx.coroutines.flow.mapNotNull
 $parentImports
 $globalActionImports
 
