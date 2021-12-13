@@ -17,14 +17,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.steamclock.debugmenu.DebugMenu
+import com.steamclock.debugmenu.DoubleValue
+import com.steamclock.debugmenu.IntValue
+import com.steamclock.debugmenu.LongValue
 import com.steamclock.debugmenu.generated.ButtonMenu
 import com.steamclock.debugmenu.generated.GlobalDebugMenu
 import com.steamclock.debugmenu.generated.TestingMenu
 import com.steamclock.debugmenu.generated.initDebugMenus
-import com.steamclock.debugmenu_annotation.DebugAction
-import com.steamclock.debugmenu_annotation.DebugBoolean
+import com.steamclock.debugmenu_annotation.*
 import com.steamclock.debugmenu_ui.showOnGesture
 import com.steamclock.debugmenusample.ui.theme.DebugmenuTheme
+import kotlinx.coroutines.runBlocking
 
 @DebugBoolean(title = "Enable easy debug menu")
 class EasyDebugMenuToggle
@@ -48,6 +52,15 @@ class MainActivity : AppCompatActivity() {
     fun showButtonsMenu() {
         ButtonMenu.show()
     }
+
+    @DebugInt(title = "Int")
+    class IntKey
+
+    @DebugDouble(title = "Double")
+    class DoubleKey
+
+    @DebugLong(title = "Long")
+    class LongKey
 
     @DebugAction(title = "Show Testing Menu")
     fun showTestingMenu() {
