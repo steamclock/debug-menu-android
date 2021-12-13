@@ -75,6 +75,11 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
         state.display.displayMenu(state.title, state.options[menu]!!)
     }
 
+    fun optionForKey(key: String): DebugOption? {
+        val allOptions = state.options.flatMap { it.value }
+        return allOptions.firstOrNull { it.key == key }
+    }
+
     private suspend fun hasSetPassword(): Boolean {
         val enteredCode = value<String>(DEBUG_MENU_CODE_KEY)
         return enteredCode == code
