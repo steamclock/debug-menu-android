@@ -1,11 +1,11 @@
 package com.steamclock.debugmenu_ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,18 +24,26 @@ fun OptionSelection(selection: OptionSelection) {
     val composableScope = rememberCoroutineScope()
     val expanded = remember { mutableStateOf(false) }
     val selectedIndex = DebugMenu.instance.flow<Int>(selection.key).collectAsState(initial = selection.defaultIndex)
+    val selectedIndexValue = selectedIndex.value
+    val value = if (selectedIndexValue != null) selection.options[selectedIndexValue].toString() else ""
+
     Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(
-            selection.options[selectedIndex.value].toString(),
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = { expanded.value = true })
-        )
+        OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                expanded.value = !expanded.value
+            }
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(selection.title)
+                Text(value)
+            }
+        }
         DropdownMenu(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false },
-            modifier = Modifier.fillMaxWidth()
         ) {
             selection.options.forEachIndexed { index, option ->
                 DropdownMenuItem(onClick = {
