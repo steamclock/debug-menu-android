@@ -116,6 +116,7 @@ class $menuName private constructor() {
             $optionsText
         }
     }
+    
     companion object {
         const val key = "$menuKey"
         private val instance = $menuName()
