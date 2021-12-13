@@ -30,6 +30,27 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
                         }
                     }
                 }
+                is DoubleValue -> {
+                    state.persistence.apply {
+                        if (readValue<Double>(it.key) == null) {
+                            writeValue(it.key, it.defaultValue)
+                        }
+                    }
+                }
+                is IntValue -> {
+                    state.persistence.apply {
+                        if (readValue<Int>(it.key) == null) {
+                            writeValue(it.key, it.defaultValue)
+                        }
+                    }
+                }
+                is LongValue -> {
+                    state.persistence.apply {
+                        if (readValue<Long>(it.key) == null) {
+                            writeValue(it.key, it.defaultValue)
+                        }
+                    }
+                }
             }
         }
     }

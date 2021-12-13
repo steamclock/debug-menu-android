@@ -15,6 +15,12 @@ class LogDisplay: DebugMenuDisplay {
                     println("   ${it.title} - Action")
                 is Toggle ->
                     println("   ${it.title} - ${DebugMenu.instance.valueBlocking<Boolean>(it.key)}")
+                is DoubleValue ->
+                    println("   ${it.title} - ${DebugMenu.instance.valueBlocking<Double>(it.key)}")
+                is IntValue ->
+                    println("   ${it.title} - ${DebugMenu.instance.valueBlocking<Int>(it.key)}")
+                is LongValue ->
+                    println("   ${it.title} - ${DebugMenu.instance.valueBlocking<Long>(it.key)}")
             }
 
         }
