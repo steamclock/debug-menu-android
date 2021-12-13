@@ -12,7 +12,7 @@ internal class MenuClassBuilder(
                     if (option.isGlobal) {
                         val actionText =
                             "Action(title = \"${option.title}\", onClick = { ${option.functionName}() })"
-                        "DebugMenu.instance.addOptions(\"$menuKey\", $actionText)"
+                        "DebugMenu.instance.addOptions(key, $actionText)"
                     } else {
                         ""
                     }
@@ -21,7 +21,7 @@ internal class MenuClassBuilder(
                     val toggle = option.toggle
                     val toggleText =
                         "Toggle(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
-                    "DebugMenu.instance.addOptions(\"$menuKey\", $toggleText)"
+                    "DebugMenu.instance.addOptions(key, $toggleText)"
                 }
             }
         }
@@ -85,7 +85,7 @@ internal class MenuClassBuilder(
             val action = Action(title = "${it.title}", onClick = {
                 instance.${parentName}Ref?.get()?.${it.functionName}()
             })
-            DebugMenu.instance.addOptions("$menuKey", action)    
+            DebugMenu.instance.addOptions(key, action)    
                     """
                 }
 
@@ -122,7 +122,7 @@ class $menuName private constructor() {
         $debugValues
         
         fun show() = runBlocking {
-            DebugMenu.instance.show("$menuKey")
+            DebugMenu.instance.show(key)
         }
         
         $initFunctions
