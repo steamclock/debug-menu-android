@@ -23,6 +23,24 @@ internal class MenuClassBuilder(
                         "BooleanValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
                     "DebugMenu.instance.addOptions(key, $toggleText)"
                 }
+                is DoubleWrapper -> {
+                    val toggle = option.doubleValue
+                    val toggleText =
+                        "DoubleValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                    "DebugMenu.instance.addOptions(key, $toggleText)"
+                }
+                is IntWrapper -> {
+                    val toggle = option.intValue
+                    val toggleText =
+                        "IntValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                    "DebugMenu.instance.addOptions(key, $toggleText)"
+                }
+                is LongWrapper -> {
+                    val toggle = option.longValue
+                    val toggleText =
+                        "LongValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                    "DebugMenu.instance.addOptions(key, $toggleText)"
+                }
             }
         }
 
@@ -35,6 +53,18 @@ internal class MenuClassBuilder(
                 is BooleanWrapper -> {
                     val toggle = it.toggle
                     "val ${toggle.key} = DebugValue<Boolean>(DebugMenu.instance.flow(\"${toggle.key}\"))"
+                }
+                is DoubleWrapper -> {
+                    val toggle = it.doubleValue
+                    "val ${toggle.key} = DebugValue<Double>(DebugMenu.instance.flow(\"${toggle.key}\"))"
+                }
+                is IntWrapper -> {
+                    val toggle = it.intValue
+                    "val ${toggle.key} = DebugValue<Int>(DebugMenu.instance.flow(\"${toggle.key}\"))"
+                }
+                is LongWrapper -> {
+                    val toggle = it.longValue
+                    "val ${toggle.key} = DebugValue<Long>(DebugMenu.instance.flow(\"${toggle.key}\"))"
                 }
             }
         }
