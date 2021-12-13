@@ -31,6 +31,7 @@ fun Menu(title: String, options: List<DebugOption>) {
                     is DoubleValue -> DoubleOption(option)
                     is IntValue -> IntOption(option)
                     is LongValue -> LongOption(option)
+                    is StringSelection -> StringSelection(option)
                 }
             }
         }
