@@ -132,9 +132,9 @@ import $parentPackage
 $debugMenuImports
 
 fun $parentName.initDebugMenus() {
-    ${debugMenuInitCalls.joinToString("\n")}
+    ${debugMenuInitCalls.joinToString("\n    ")}
 }
-            """.trimIndent()
+            """
             writeContents(contents, "${parentName}DebugMenuExtension")
         }
     }

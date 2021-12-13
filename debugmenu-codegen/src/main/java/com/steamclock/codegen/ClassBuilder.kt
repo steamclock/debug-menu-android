@@ -1,12 +1,17 @@
 package com.steamclock.codegen
 
-internal class MenuClassBuilder(private val menuKey: String, private val menuName: String, private val options: List<AnnotationWrapper>) {
+internal class MenuClassBuilder(
+    private val menuKey: String,
+    private val menuName: String,
+    private val options: List<AnnotationWrapper>
+) {
     private val optionsText: String
-        get() = options.joinToString("\n") { option ->
+        get() = options.joinToString("\n            ") { option ->
             when (option) {
                 is ActionWrapper -> {
                     if (option.isGlobal) {
-                        val actionText = "Action(title = \"${option.title}\", onClick = { ${option.functionName}() })"
+                        val actionText =
+                            "Action(title = \"${option.title}\", onClick = { ${option.functionName}() })"
                         "DebugMenu.instance.addOptions(\"$menuKey\", $actionText)"
                     } else {
                         ""
@@ -14,16 +19,19 @@ internal class MenuClassBuilder(private val menuKey: String, private val menuNam
                 }
                 is ToggleWrapper -> {
                     val toggle = option.toggle
-                    val toggleText = "Toggle(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                    val toggleText =
+                        "Toggle(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
                     "DebugMenu.instance.addOptions(\"$menuKey\", $toggleText)"
                 }
             }
         }
 
     private val debugValues: String
-        get() = options.joinToString("\n") {
+        get() = options.joinToString("\n        ") {
             when (it) {
-                is ActionWrapper -> { "" }
+                is ActionWrapper -> {
+                    ""
+                }
                 is ToggleWrapper -> {
                     val toggle = it.toggle
                     "val ${toggle.key} = DebugValue<Boolean>(DebugMenu.instance.flow(\"${toggle.key}\"))"
@@ -56,7 +64,7 @@ internal class MenuClassBuilder(private val menuKey: String, private val menuNam
 
     private val weakReferences: String
         get() {
-            return referencedParents.joinToString("\n") {
+            return referencedParents.joinToString("\n    ") {
                 val parentName = it.split(".").last()
                 "var ${parentName}Ref: WeakReference<$parentName>? = null"
             }
@@ -68,25 +76,25 @@ internal class MenuClassBuilder(private val menuKey: String, private val menuNam
 
     private val initFunctions: String
         get() {
-            return actionsByParents.keys.joinToString("\n") { parent ->
+            return actionsByParents.keys.joinToString("\n        ") { parent ->
                 val actions = actionsByParents[parent] ?: listOf()
                 val parentName = parent.split(".").last()
 
-                val actionStrings = actions.joinToString {
+                val actionStrings = actions.joinToString() {
                     """
-val action = Action(title = "${it.title}", onClick = {
-    instance.${parentName}Ref?.get()?.${it.functionName}()
-})
-DebugMenu.instance.addOptions("$menuKey", action)    
-                    """.trimIndent()
+            val action = Action(title = "${it.title}", onClick = {
+                instance.${parentName}Ref?.get()?.${it.functionName}()
+            })
+            DebugMenu.instance.addOptions("$menuKey", action)    
+                    """
                 }
 
                 """
-fun initialize(parent: $parentName) = runBlocking {
-    instance.${parentName}Ref = WeakReference(parent)
-    $actionStrings
-}
-                """.trimIndent()
+        fun initialize(parent: $parentName) = runBlocking {
+            instance.${parentName}Ref = WeakReference(parent)
+        $actionStrings
+        }
+                """
             }
         }
 
@@ -101,24 +109,24 @@ $parentImports
 $globalActionImports
 
 class $menuName private constructor() {
-  $weakReferences
-  
-  init {
-      runBlocking {
-        $optionsText
+    $weakReferences
+    
+    init {
+        runBlocking {
+            $optionsText
+        }
     }
-  }
-  companion object {
-      const val key = "$menuKey"
-      private val instance = $menuName()
-      $debugValues
-      
-      fun show() = runBlocking {
-        DebugMenu.instance.show("$menuKey")
-      }
-      
-      $initFunctions
-  }
+    companion object {
+        const val key = "$menuKey"
+        private val instance = $menuName()
+        $debugValues
+        
+        fun show() = runBlocking {
+            DebugMenu.instance.show("$menuKey")
+        }
+        
+        $initFunctions
+    }
 }
     """.trimIndent()
 
