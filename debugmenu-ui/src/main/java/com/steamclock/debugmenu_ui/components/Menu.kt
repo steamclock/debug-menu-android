@@ -28,6 +28,9 @@ fun Menu(title: String, options: List<DebugOption>) {
                 when (option) {
                     is Action -> ActionOption(option)
                     is BooleanValue -> BooleanOption(option)
+                    is DoubleValue -> DoubleOption(option)
+                    is IntValue -> IntOption(option)
+                    is LongValue -> LongOption(option)
                 }
             }
         }
