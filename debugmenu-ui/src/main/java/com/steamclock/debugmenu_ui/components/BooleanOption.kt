@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  * Created by jake on 2021-12-06, 2:15 p.m.
  */
 @Composable
-fun ToggleOption(option: BooleanValue) {
+fun BooleanOption(option: BooleanValue) {
     val switchState = DebugMenu.instance.flow<Boolean>(option.key).collectAsState(initial = option.defaultValue)
     val composableScope = rememberCoroutineScope()
     Row(modifier = Modifier.fillMaxWidth(),

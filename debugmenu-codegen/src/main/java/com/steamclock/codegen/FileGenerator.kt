@@ -14,7 +14,7 @@ import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
 
 internal sealed class AnnotationWrapper
-internal data class ToggleWrapper(val toggle: BooleanValue): AnnotationWrapper()
+internal data class BooleanWrapper(val toggle: BooleanValue): AnnotationWrapper()
 internal data class ActionWrapper(val title: String, val functionName: String, val parentClass: String, val packageName: String, val isGlobal: Boolean): AnnotationWrapper()
 
 @AutoService(Processor::class) // For registering the service
@@ -63,7 +63,7 @@ class FileGenerator : AbstractProcessor() {
             val menuKey = (it.getAnnotationsByType(DebugBoolean::class.java)[0]).menuKey
             val defaultValue = (it.getAnnotationsByType(DebugBoolean::class.java)[0]).defaultValue
             val toggleOption = BooleanValue(title, name, defaultValue)
-            addOptionToMenu(menuKey, ToggleWrapper(toggleOption))
+            addOptionToMenu(menuKey, BooleanWrapper(toggleOption))
         }
 
         roundEnvironment?.getElementsAnnotatedWith(DebugAction::class.java)?.forEach {

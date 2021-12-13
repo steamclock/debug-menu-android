@@ -17,10 +17,10 @@ internal class MenuClassBuilder(
                         ""
                     }
                 }
-                is ToggleWrapper -> {
+                is BooleanWrapper -> {
                     val toggle = option.toggle
                     val toggleText =
-                        "Toggle(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                        "BooleanValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
                     "DebugMenu.instance.addOptions(key, $toggleText)"
                 }
             }
@@ -32,7 +32,7 @@ internal class MenuClassBuilder(
                 is ActionWrapper -> {
                     ""
                 }
-                is ToggleWrapper -> {
+                is BooleanWrapper -> {
                     val toggle = it.toggle
                     "val ${toggle.key} = DebugValue<Boolean>(DebugMenu.instance.flow(\"${toggle.key}\"))"
                 }
