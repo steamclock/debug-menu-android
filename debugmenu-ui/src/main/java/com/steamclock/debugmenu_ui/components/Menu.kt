@@ -27,7 +27,7 @@ fun Menu(title: String, options: List<DebugOption>) {
             items(options) { option ->
                 when (option) {
                     is Action -> ActionOption(option)
-                    is BooleanValue -> ToggleOption(option)
+                    is BooleanValue -> BooleanOption(option)
                 }
             }
         }
