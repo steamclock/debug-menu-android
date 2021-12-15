@@ -6,4 +6,4 @@ package com.steamclock.debugmenu
  */
 sealed class DebugOption(open val title: String)
 data class Toggle(override val title: String, val key: String, val defaultValue: Boolean = false): DebugOption(title)
-data class Action(override val title: String, val onClick: () -> Unit): DebugOption(title)
+data class Action(override val title: String, val onClick: suspend () -> Unit): DebugOption(title)

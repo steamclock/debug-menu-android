@@ -53,7 +53,7 @@ class DebugMenu private constructor(private val code: String = UUID.randomUUID()
 
     companion object {
         private const val DEBUG_MENU_CODE_KEY = "DEBUG_MENU_CODE_KEY"
-        internal const val DEBUG_GLOBAL_MENU = "DEBUG_GLOBAL_MENU"
+        const val DEBUG_GLOBAL_MENU = "DEBUG_GLOBAL_MENU"
 
         private var _instance: DebugMenu? = null
         val instance: DebugMenu
