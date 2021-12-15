@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.steamclock.debugmenu.*
-import com.steamclock.debugmenu_ui.showOnGesture
+import com.steamclock.debugmenu_ui.showDebugMenuOnGesture
 import com.steamclock.debugmenusample.ui.theme.DebugmenuTheme
 import kotlinx.coroutines.runBlocking
 
@@ -65,7 +65,7 @@ fun DebugMenuSample(showSecretText: Boolean, altButtonText: Boolean, altButtonCo
         Button(
             colors = colors,
             onClick = { buttonClicked() },
-            modifier = Modifier.showOnGesture(onClick = { buttonClicked() }),
+            modifier = Modifier.showDebugMenuOnGesture(onClick = { buttonClicked() }),
         ) {
             val text = if (altButtonText) {
                 "Reveal Debug Menu"
@@ -79,7 +79,7 @@ fun DebugMenuSample(showSecretText: Boolean, altButtonText: Boolean, altButtonCo
                 TextView(context)
             }, update = {
                 it.text = "3 second long press for menu2!"
-                it.showOnGesture("menu2")
+                it.showDebugMenuOnGesture("menu2")
             })
         }
     }
