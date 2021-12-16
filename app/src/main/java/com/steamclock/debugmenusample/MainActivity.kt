@@ -25,10 +25,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         runBlocking {
-            DebugMenu.instance.addOptions(Toggle("Show secret text", key = "show secret text"))
-            DebugMenu.instance.addOptions(Action("Buttons Menu") {
-                DebugMenu.instance.show("menu2")
-            })
+            DebugMenu.instance.addOptions(
+                Toggle("Show secret text", key = "show secret text"),
+                Action("Buttons Menu") {
+                    DebugMenu.instance.show("menu2")
+                }
+            )
+
             DebugMenu.instance.addOptions("menu2",
                 Toggle("Alt Button Text", key = "alt button text"),
                 Toggle("Alt Button Colour", key = "alt button color")
@@ -38,7 +41,12 @@ class MainActivity : AppCompatActivity() {
         setContent {
             DebugmenuTheme {
                 Surface(color = MaterialTheme.colors.background) {
+                    // access via flow, which can be collected as state for Jetpack Compose
                     val showSecretText = DebugMenu.instance.flow<Boolean>("show secret text").collectAsState(initial = false)
+
+                    // access directly, blocking to allow synchronous access
+                    val showSecretTextValue = DebugMenu.instance.valueBlocking<Boolean>("show secret text")
+
                     val useAltButtonText = DebugMenu.instance.flow<Boolean>("alt button text").collectAsState(initial = false)
                     val useAltButtonColour = DebugMenu.instance.flow<Boolean>("alt button color").collectAsState(initial = false)
                     DebugMenuSample(

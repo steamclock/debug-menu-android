@@ -5,6 +5,8 @@ import com.steamclock.debugmenu.persistence.readValue
 import com.steamclock.debugmenu.persistence.writeValue
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 
 /**
  * debugmenu
@@ -30,3 +32,7 @@ inline fun <reified T: Any> DebugMenu.flow(key: String): Flow<T> {
 suspend fun DebugMenu.addOptions(vararg newOptions: DebugOption) {
     addOptions(DebugMenu.DEBUG_GLOBAL_MENU, *newOptions)
 }
+
+fun String.sha256(): String = MessageDigest.getInstance("SHA-256")
+    .digest(this.toByteArray(StandardCharsets.UTF_8))
+    .fold("", { str, it -> str + "%02x".format(it) })

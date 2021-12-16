@@ -33,7 +33,7 @@ fun CodeEntry(onSubmit: suspend (String) -> Unit) {
 
     fun submit() {
         coroutineScope.launch {
-            onSubmit(textState.value.text.trim())
+            onSubmit(textState.value.text.trimEnd())
         }
     }
 
