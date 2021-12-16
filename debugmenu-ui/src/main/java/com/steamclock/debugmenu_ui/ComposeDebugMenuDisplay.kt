@@ -14,16 +14,15 @@ import com.steamclock.debugmenu_ui.components.Menu
 import java.lang.ref.WeakReference
 
 
-class ComposeDebugMenuDisplay(context: Context) : DebugMenuDisplay {
+class ComposeDebugMenuDisplay(app: Application) : DebugMenuDisplay {
     private var contextReference: WeakReference<Context>? = null
     private var currentDialog: WeakReference<DebugMenuDialogFragment>? = null
     private var activityReference: WeakReference<AppCompatActivity>? = null
 
     init {
         // always use app context
-        val appContext = context.applicationContext
-        contextReference = WeakReference(appContext)
-        monitor(appContext as Application)
+        contextReference = WeakReference(app)
+        monitor(app)
     }
 
     private fun monitor(application: Application) {
