@@ -18,8 +18,8 @@ import kotlinx.coroutines.runBlocking
 const val longClickDuration = 3000L
 
 // Adds a gesture handler to an Android View
-fun View.showOnGesture(menuKey: String,
-                       longPressDuration: Long = longClickDuration) {
+fun View.showDebugMenuOnGesture(menuKey: String,
+                                longPressDuration: Long = longClickDuration) {
     var clickTime = 0L
 
     setOnTouchListener { view, event ->
@@ -48,9 +48,9 @@ fun View.showOnGesture(menuKey: String,
 // Note that if you're using this class on a clickable element, this
 // will override the normal onClick method
 @OptIn(ExperimentalComposeUiApi::class)
-fun Modifier.showOnGesture(menuKey: String = DebugMenu.DEBUG_GLOBAL_MENU,
-                           longPressDuration: Long = longClickDuration,
-                           onClick: (() -> Unit)? = null) = composed(
+fun Modifier.showDebugMenuOnGesture(menuKey: String = DebugMenu.DEBUG_GLOBAL_MENU,
+                                    longPressDuration: Long = longClickDuration,
+                                    onClick: (() -> Unit)? = null) = composed(
     inspectorInfo = {
         name = "Debug Gesture"
     },

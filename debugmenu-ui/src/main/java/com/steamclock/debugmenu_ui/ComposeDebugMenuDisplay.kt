@@ -14,13 +14,18 @@ import com.steamclock.debugmenu_ui.components.Menu
 import java.lang.ref.WeakReference
 
 
-class ComposeDebugMenuDisplay: DebugMenuDisplay {
+class ComposeDebugMenuDisplay(app: Application) : DebugMenuDisplay {
     private var contextReference: WeakReference<Context>? = null
     private var currentDialog: WeakReference<DebugMenuDialogFragment>? = null
     private var activityReference: WeakReference<AppCompatActivity>? = null
 
-    fun attach(application: Application) {
-        contextReference = WeakReference(application)
+    init {
+        // always use app context
+        contextReference = WeakReference(app)
+        monitor(app)
+    }
+
+    private fun monitor(application: Application) {
         application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(p0: Activity, p1: Bundle?) {
                 activityReference = WeakReference(p0 as AppCompatActivity)

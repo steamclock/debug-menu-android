@@ -23,7 +23,7 @@ import com.steamclock.debugmenu.generated.TestingMenu
 import com.steamclock.debugmenu.generated.initDebugMenus
 import com.steamclock.debugmenu_annotation.DebugAction
 import com.steamclock.debugmenu_annotation.DebugToggle
-import com.steamclock.debugmenu_ui.showOnGesture
+import com.steamclock.debugmenu_ui.showDebugMenuOnGesture
 import com.steamclock.debugmenusample.ui.theme.DebugmenuTheme
 
 @DebugToggle(title = "Enable easy debug menu")
@@ -92,7 +92,7 @@ fun DebugMenuSample(easyDebugMenuToggle: Boolean, showSecretText: Boolean, altBu
         Button(
             colors = colors,
             onClick = { buttonClicked() },
-            modifier = Modifier.showOnGesture(longPressDuration = 1000L * seconds, onClick = { buttonClicked() }),
+            modifier = Modifier.showDebugMenuOnGesture(longPressDuration = 1000L * seconds, onClick = { buttonClicked() }),
         ) {
             val text = if (altButtonText) {
                 "Reveal Debug Menu"
@@ -106,7 +106,7 @@ fun DebugMenuSample(easyDebugMenuToggle: Boolean, showSecretText: Boolean, altBu
                 TextView(context)
             }, update = {
                 it.text = "$seconds second long press for menu2!"
-                it.showOnGesture(ButtonMenu.key, longPressDuration = 1000L * seconds)
+                it.showDebugMenuOnGesture(ButtonMenu.key, longPressDuration = 1000L * seconds)
             })
         }
     }
