@@ -15,7 +15,7 @@ import kotlinx.coroutines.runBlocking
  * debugmenu
  * Created by jake on 2021-12-06, 3:20 p.m.
  */
-private const val longClickDuration = 3000L
+const val longClickDuration = 3000L
 
 // Adds a gesture handler to an Android View
 fun View.showDebugMenuOnGesture(menuKey: String,
