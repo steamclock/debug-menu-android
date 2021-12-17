@@ -129,7 +129,7 @@ class $menuName private constructor() {
         $initFunctions
     }
 }
-    """.trimIndent()
+    """
 
     fun getContent(): String {
         return contentTemplate
