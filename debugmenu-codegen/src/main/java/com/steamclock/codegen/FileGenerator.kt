@@ -121,7 +121,7 @@ class FileGenerator : AbstractProcessor() {
         }
         if (result == false) return false
 
-        result = roundEnvironment?.forEach(DebugLong::class.java, validKind = ElementKind.METHOD) { element, annotation ->
+        result = roundEnvironment?.forEach(DebugAction::class.java, validKind = ElementKind.METHOD) { element, annotation ->
             val title = annotation.title
             val menuKey = annotation.menuKey
             val functionName = element.simpleName.toString()
