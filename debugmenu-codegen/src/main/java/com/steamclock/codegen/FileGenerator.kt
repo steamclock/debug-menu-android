@@ -69,9 +69,10 @@ class FileGenerator : AbstractProcessor() {
             }
 
             val name = it.simpleName.toString()
-            val title = (it.getAnnotationsByType(DebugBoolean::class.java)[0]).title
-            val menuKey = (it.getAnnotationsByType(DebugBoolean::class.java)[0]).menuKey
-            val defaultValue = (it.getAnnotationsByType(DebugBoolean::class.java)[0]).defaultValue
+            val annotation = it.getAnnotationsByType(DebugBoolean::class.java)[0]
+            val title = annotation.title
+            val menuKey = annotation.menuKey
+            val defaultValue = annotation.defaultValue
             val toggleOption = BooleanValue(title, name, defaultValue)
             addOptionToMenu(menuKey, BooleanWrapper(toggleOption))
         }
@@ -83,9 +84,10 @@ class FileGenerator : AbstractProcessor() {
             }
 
             val name = it.simpleName.toString()
-            val title = (it.getAnnotationsByType(DebugInt::class.java)[0]).title
-            val menuKey = (it.getAnnotationsByType(DebugInt::class.java)[0]).menuKey
-            val defaultValue = (it.getAnnotationsByType(DebugInt::class.java)[0]).defaultValue
+            val annotation = it.getAnnotationsByType(DebugInt::class.java)[0]
+            val title = annotation.title
+            val menuKey = annotation.menuKey
+            val defaultValue = annotation.defaultValue
             val toggleOption = IntValue(title, name, defaultValue)
             addOptionToMenu(menuKey, IntWrapper(toggleOption))
         }
@@ -97,9 +99,10 @@ class FileGenerator : AbstractProcessor() {
             }
 
             val name = it.simpleName.toString()
-            val title = (it.getAnnotationsByType(DebugDouble::class.java)[0]).title
-            val menuKey = (it.getAnnotationsByType(DebugDouble::class.java)[0]).menuKey
-            val defaultValue = (it.getAnnotationsByType(DebugDouble::class.java)[0]).defaultValue
+            val annotation = it.getAnnotationsByType(DebugDouble::class.java)[0]
+            val title = annotation.title
+            val menuKey = annotation.menuKey
+            val defaultValue = annotation.defaultValue
             val toggleOption = DoubleValue(title, name, defaultValue)
             addOptionToMenu(menuKey, DoubleWrapper(toggleOption))
         }
@@ -111,9 +114,10 @@ class FileGenerator : AbstractProcessor() {
             }
 
             val name = it.simpleName.toString()
-            val title = (it.getAnnotationsByType(DebugLong::class.java)[0]).title
-            val menuKey = (it.getAnnotationsByType(DebugLong::class.java)[0]).menuKey
-            val defaultValue = (it.getAnnotationsByType(DebugLong::class.java)[0]).defaultValue
+            val annotation = it.getAnnotationsByType(DebugLong::class.java)[0]
+            val title = annotation.title
+            val menuKey = annotation.menuKey
+            val defaultValue = annotation.defaultValue
             val toggleOption = LongValue(title, name, defaultValue)
             addOptionToMenu(menuKey, LongWrapper(toggleOption))
         }
@@ -124,8 +128,9 @@ class FileGenerator : AbstractProcessor() {
                 return false
             }
 
-            val title = (it.getAnnotationsByType(DebugAction::class.java)[0]).title
-            val menuKey = (it.getAnnotationsByType(DebugAction::class.java)[0]).menuKey
+            val annotation = it.getAnnotationsByType(DebugAction::class.java)[0]
+            val title = annotation.title
+            val menuKey = annotation.menuKey
             val functionName = it.simpleName.toString()
             val parentClass = it.enclosingElement.toString()
             val isGlobal = parentClass.endsWith("Kt")
