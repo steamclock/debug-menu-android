@@ -26,7 +26,7 @@ import com.steamclock.debugmenu_ui.showDebugMenuOnGesture
 import com.steamclock.debugmenusample.ui.theme.DebugmenuTheme
 
 @DebugBoolean(title = "Enable easy debug menu")
-class EasyDebugMenuToggle
+object EasyDebugMenuToggle
 
 @DebugAction(title = "Global action", menuKey = "TestingMenu")
 fun doGlobalAction() {
@@ -35,13 +35,13 @@ fun doGlobalAction() {
 
 class MainActivity : AppCompatActivity() {
     @DebugBoolean(title = "Show secret text", menuKey = "TestingMenu")
-    class ShowSecretTextToggle
+    object ShowSecretTextToggle
 
     @DebugBoolean(title = "Alt Button Text", menuKey = "ButtonMenu")
-    class AltButtonTextToggle
+    object AltButtonTextToggle
 
     @DebugBoolean(title = "Alt Button Colour", menuKey = "ButtonMenu")
-    class AltButtonColourToggle
+    object AltButtonColourToggle
 
     @DebugAction(title = "Buttons Menu", menuKey = "TestingMenu")
     fun showButtonsMenu() {
@@ -49,13 +49,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     @DebugInt(title = "Int")
-    class IntKey
+    object IntKey
 
     @DebugDouble(title = "Double")
-    class DoubleKey
+    object DoubleKey
 
     @DebugLong(title = "Long")
-    class LongKey
+    object LongKey
 
     @DebugAction(title = "Show Testing Menu")
     fun showTestingMenu() {
