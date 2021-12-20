@@ -65,8 +65,15 @@ private fun <T> NumberOption(title: String, value: T, onUpdate: suspend (String)
 @Composable
 fun IntOption(option: IntValue) {
     val intState = DebugMenu.instance.flow<Int>(option.key).collectAsState(initial = option.defaultValue)
+    val lastValue = remember { mutableStateOf(0) }
+
+    LaunchedEffect(key1 = option, block = {
+        lastValue.value = intState.value
+    })
+
     NumberOption(title = option.title, value = intState.value, onUpdate = {
-        DebugMenu.instance.update(option.key, it.toIntOrNull() ?: option.defaultValue)
+        lastValue.value = it.toIntOrNull() ?: lastValue.value
+        DebugMenu.instance.update(option.key, lastValue.value)
     })
 }
 
@@ -76,7 +83,7 @@ fun DoubleOption(option: DoubleValue) {
     val lastValue = remember { mutableStateOf(0.0) }
 
     LaunchedEffect(key1 = option, block = {
-        lastValue.value = option.defaultValue
+        lastValue.value = doubleState.value
     })
 
     NumberOption(title = option.title, value = doubleState.value, onUpdate = {
@@ -90,7 +97,14 @@ fun DoubleOption(option: DoubleValue) {
 @Composable
 fun LongOption(option: LongValue) {
     val longState = DebugMenu.instance.flow<Long>(option.key).collectAsState(initial = option.defaultValue)
+    val lastValue = remember { mutableStateOf(0L) }
+
+    LaunchedEffect(key1 = option, block = {
+        lastValue.value = longState.value
+    })
+
     NumberOption(title = option.title, value = longState.value, onUpdate = {
-        DebugMenu.instance.update(option.key, it.toLongOrNull() ?: option.defaultValue)
+        lastValue.value = it.toLongOrNull() ?: lastValue.value
+        DebugMenu.instance.update(option.key, lastValue.value)
     })
 }
