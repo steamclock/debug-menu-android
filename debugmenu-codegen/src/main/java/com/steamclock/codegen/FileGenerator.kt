@@ -121,13 +121,6 @@ class FileGenerator : AbstractProcessor() {
         }
         if (result == false) return false
 
-        roundEnvironment?.getElementsAnnotatedWith(DebugSelection::class.java)?.forEach {
-            if (it.kind != ElementKind.CLASS) {
-                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Can only be applied to classes, element: $it ")
-                return false
-            }
-        }
-
         result = roundEnvironment?.forEach(DebugSelection::class.java) { element, annotation ->
             val name = element.simpleName.toString()
             val title = annotation.title
