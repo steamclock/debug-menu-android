@@ -23,9 +23,30 @@ class DebugMenu private constructor(private val code: String) {
         newOptions.forEach {
             when (it) {
                 is Action -> { /* no op */ }
-                is Toggle -> {
+                is BooleanValue -> {
                     state.persistence.apply {
                         if (readValue<Boolean>(it.key) == null) {
+                            writeValue(it.key, it.defaultValue)
+                        }
+                    }
+                }
+                is DoubleValue -> {
+                    state.persistence.apply {
+                        if (readValue<Double>(it.key) == null) {
+                            writeValue(it.key, it.defaultValue)
+                        }
+                    }
+                }
+                is IntValue -> {
+                    state.persistence.apply {
+                        if (readValue<Int>(it.key) == null) {
+                            writeValue(it.key, it.defaultValue)
+                        }
+                    }
+                }
+                is LongValue -> {
+                    state.persistence.apply {
+                        if (readValue<Long>(it.key) == null) {
                             writeValue(it.key, it.defaultValue)
                         }
                     }

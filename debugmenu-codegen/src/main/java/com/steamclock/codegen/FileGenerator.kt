@@ -2,19 +2,25 @@ package com.steamclock.codegen
 
 import com.google.auto.service.AutoService
 import com.steamclock.debugmenu.DebugMenu.Companion.DEBUG_GLOBAL_MENU
-import com.steamclock.debugmenu.Toggle
-import com.steamclock.debugmenu_annotation.DebugAction
-import com.steamclock.debugmenu_annotation.DebugToggle
+import com.steamclock.debugmenu.BooleanValue
+import com.steamclock.debugmenu.DoubleValue
+import com.steamclock.debugmenu.IntValue
+import com.steamclock.debugmenu.LongValue
+import com.steamclock.debugmenu_annotation.*
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
+import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
 
 internal sealed class AnnotationWrapper
-internal data class ToggleWrapper(val toggle: Toggle): AnnotationWrapper()
+internal data class BooleanWrapper(val toggle: BooleanValue): AnnotationWrapper()
+internal data class IntWrapper(val intValue: IntValue): AnnotationWrapper()
+internal data class DoubleWrapper(val doubleValue: DoubleValue): AnnotationWrapper()
+internal data class LongWrapper(val longValue: LongValue): AnnotationWrapper()
 internal data class ActionWrapper(val title: String, val functionName: String, val parentClass: String, val packageName: String, val isGlobal: Boolean): AnnotationWrapper()
 
 @AutoService(Processor::class) // For registering the service
@@ -25,8 +31,30 @@ class FileGenerator : AbstractProcessor() {
     private var menus = hashMapOf<String, MutableList<AnnotationWrapper>>()
     private val initializationFunctions = mutableMapOf<String, MutableSet<String>>()
 
+    private fun <T: Annotation> RoundEnvironment.forEach(java: Class<T>,
+                                                         validKind: ElementKind = ElementKind.CLASS,
+                                                         forEach: (Element, T) -> Unit): Boolean {
+        getElementsAnnotatedWith(java)?.forEach { element ->
+            if (element.kind != validKind) {
+                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR,
+                    "Can only be applied to $validKind, element: $element "
+                )
+                return false
+            }
+
+            val annotation = element.getAnnotationsByType(java)[0]
+            forEach(element, annotation)
+        }
+        return true
+    }
+
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf(DebugToggle::class.java.name, DebugAction::class.java.name)
+        return mutableSetOf(
+            DebugBoolean::class.java.name,
+            DebugInt::class.java.name,
+            DebugDouble::class.java.name,
+            DebugLong::class.java.name,
+            DebugAction::class.java.name)
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
@@ -52,34 +80,57 @@ class FileGenerator : AbstractProcessor() {
     }
 
     override fun process(set: MutableSet<out TypeElement>?, roundEnvironment: RoundEnvironment?): Boolean {
-        roundEnvironment?.getElementsAnnotatedWith(DebugToggle::class.java)?.forEach {
-            if (it.kind != ElementKind.CLASS) {
-                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Can only be applied to classes, element: $it ")
-                return false
-            }
-
-            val name = it.simpleName.toString()
-            val title = (it.getAnnotationsByType(DebugToggle::class.java)[0]).title
-            val menuKey = (it.getAnnotationsByType(DebugToggle::class.java)[0]).menuKey
-            val defaultValue = (it.getAnnotationsByType(DebugToggle::class.java)[0]).defaultValue
-            val toggleOption = Toggle(title, name, defaultValue)
-            addOptionToMenu(menuKey, ToggleWrapper(toggleOption))
+        var result: Boolean? =
+            roundEnvironment?.forEach(DebugBoolean::class.java) { element, annotation ->
+            val name = element.simpleName.toString()
+            val title = annotation.title
+            val menuKey = annotation.menuKey
+            val defaultValue = annotation.defaultValue
+            val toggleOption = BooleanValue(title, name, defaultValue)
+            addOptionToMenu(menuKey, BooleanWrapper(toggleOption))
         }
+        if (result == false) return false
 
-        roundEnvironment?.getElementsAnnotatedWith(DebugAction::class.java)?.forEach {
-            if (it.kind != ElementKind.METHOD) {
-                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Can only be applied to function, element: $it ")
-                return false
-            }
+        result = roundEnvironment?.forEach(DebugInt::class.java) { element, annotation ->
+            val name = element.simpleName.toString()
+            val title = annotation.title
+            val menuKey = annotation.menuKey
+            val defaultValue = annotation.defaultValue
+            val toggleOption = IntValue(title, name, defaultValue)
+            addOptionToMenu(menuKey, IntWrapper(toggleOption))
+        }
+        if (result == false) return false
 
-            val title = (it.getAnnotationsByType(DebugAction::class.java)[0]).title
-            val menuKey = (it.getAnnotationsByType(DebugAction::class.java)[0]).menuKey
-            val functionName = it.simpleName.toString()
-            val parentClass = it.enclosingElement.toString()
+        result = roundEnvironment?.forEach(DebugDouble::class.java) { element, annotation ->
+            val name = element.simpleName.toString()
+            val title = annotation.title
+            val menuKey = annotation.menuKey
+            val defaultValue = annotation.defaultValue
+            val toggleOption = DoubleValue(title, name, defaultValue)
+            addOptionToMenu(menuKey, DoubleWrapper(toggleOption))
+        }
+        if (result == false) return false
+
+        result = roundEnvironment?.forEach(DebugLong::class.java) { element, annotation ->
+            val name = element.simpleName.toString()
+            val title = annotation.title
+            val menuKey = annotation.menuKey
+            val defaultValue = annotation.defaultValue
+            val toggleOption = LongValue(title, name, defaultValue)
+            addOptionToMenu(menuKey, LongWrapper(toggleOption))
+        }
+        if (result == false) return false
+
+        result = roundEnvironment?.forEach(DebugAction::class.java, validKind = ElementKind.METHOD) { element, annotation ->
+            val title = annotation.title
+            val menuKey = annotation.menuKey
+            val functionName = element.simpleName.toString()
+            val parentClass = element.enclosingElement.toString()
             val isGlobal = parentClass.endsWith("Kt")
             val packageName = parentClass.split(".").dropLast(1).joinToString(".")
             addOptionToMenu(menuKey, ActionWrapper(title = title, functionName = functionName, parentClass = parentClass, isGlobal = isGlobal, packageName = packageName))
         }
+        if (result == false) return false
 
         generateMenuClasses(menus)
 

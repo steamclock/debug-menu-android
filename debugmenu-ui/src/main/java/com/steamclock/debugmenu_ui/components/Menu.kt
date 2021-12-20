@@ -10,9 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.steamclock.debugmenu.Action
-import com.steamclock.debugmenu.DebugOption
-import com.steamclock.debugmenu.Toggle
+import com.steamclock.debugmenu.*
 
 /**
  * debugmenu
@@ -29,7 +27,10 @@ fun Menu(title: String, options: List<DebugOption>) {
             items(options) { option ->
                 when (option) {
                     is Action -> ActionOption(option)
-                    is Toggle -> ToggleOption(option)
+                    is BooleanValue -> BooleanOption(option)
+                    is DoubleValue -> DoubleOption(option)
+                    is IntValue -> IntOption(option)
+                    is LongValue -> LongOption(option)
                 }
             }
         }

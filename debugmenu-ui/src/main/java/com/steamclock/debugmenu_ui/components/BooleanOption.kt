@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.steamclock.debugmenu.DebugMenu
-import com.steamclock.debugmenu.Toggle
+import com.steamclock.debugmenu.BooleanValue
 import com.steamclock.debugmenu.flow
 import com.steamclock.debugmenu.update
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  * Created by jake on 2021-12-06, 2:15 p.m.
  */
 @Composable
-fun ToggleOption(option: Toggle) {
+fun BooleanOption(option: BooleanValue) {
     val switchState = DebugMenu.instance.flow<Boolean>(option.key).collectAsState(initial = option.defaultValue)
     val composableScope = rememberCoroutineScope()
     Row(modifier = Modifier.fillMaxWidth(),
