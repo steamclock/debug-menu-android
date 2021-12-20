@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @DebugSelection("Selection Test", options = ["Testing", "1", "2", "3"])
-    class SelectionKey
+    object SelectionKey
 
     @DebugInt(title = "Int")
     object IntKey
