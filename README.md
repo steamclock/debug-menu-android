@@ -14,7 +14,10 @@ This repo includes 5 modules:
 
 **debugmenu-codegen** - The annotations and annotation processor used for compile-time safe usage of the menu.
 
+![](3.png)
 ![](1.png)
+
+![](4.png)
 ![](2.png)
 
 # Installation
