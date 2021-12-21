@@ -3,8 +3,7 @@ package com.steamclock.debugmenu_ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +29,9 @@ fun BooleanOption(option: BooleanValue) {
             composableScope.launch {
                 DebugMenu.instance.update(option.key, it)
             }
-        })
+        }, colors = SwitchDefaults.colors(
+            checkedThumbColor = MaterialTheme.colors.primary,
+            checkedTrackColor = MaterialTheme.colors.primaryVariant
+        ))
     }
 }

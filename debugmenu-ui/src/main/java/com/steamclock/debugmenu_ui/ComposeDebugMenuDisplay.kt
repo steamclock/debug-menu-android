@@ -5,6 +5,11 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import com.steamclock.debugmenu.DebugMenu
 import com.steamclock.debugmenu.DebugOption
@@ -54,16 +59,26 @@ class ComposeDebugMenuDisplay(app: Application) : DebugMenuDisplay {
     }
 
     override suspend fun displayMenu(title: String, options: List<DebugOption>) {
-        showDialog { Menu(title, options) }
+        showDialog {
+            MaterialTheme(colors = if (isSystemInDarkTheme()) darkColors() else lightColors()) {
+                Surface {
+                    Menu(title, options)
+                }
+            }
+        }
     }
 
     override suspend fun displayCodeEntry() {
         showDialog {
-            CodeEntry(onSubmit = { code ->
-                DebugMenu.instance.enterCode(code)
-                it.dismiss()
-                DebugMenu.instance.show()
-            })
+            MaterialTheme(colors = if (isSystemInDarkTheme()) darkColors() else lightColors()) {
+                Surface {
+                    CodeEntry(onSubmit = { code ->
+                        DebugMenu.instance.enterCode(code)
+                        it.dismiss()
+                        DebugMenu.instance.show()
+                    })
+                }
+            }
         }
     }
 }
