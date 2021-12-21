@@ -48,6 +48,9 @@ class MainActivity : AppCompatActivity() {
         ButtonMenu.show()
     }
 
+    @DebugSelection("Selection Test", options = ["Testing", "1", "2", "3"])
+    object SelectionKey
+
     @DebugInt(title = "Int")
     object IntKey
 

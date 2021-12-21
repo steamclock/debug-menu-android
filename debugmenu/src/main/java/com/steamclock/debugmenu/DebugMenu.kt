@@ -51,6 +51,14 @@ class DebugMenu private constructor(private val code: String) {
                         }
                     }
                 }
+                is OptionSelection -> {
+                    state.persistence.apply {
+                        val value = it.defaultIndex
+                        if (value != null && readValue<Int>(it.key) == null) {
+                            writeValue(it.key, value)
+                        }
+                    }
+                }
             }
         }
     }
@@ -67,8 +75,13 @@ class DebugMenu private constructor(private val code: String) {
         state.display.displayMenu(state.title, state.options[menu]!!)
     }
 
-    private fun hasSetPassword(): Boolean {
-        val enteredCode = valueBlocking<String>(DEBUG_MENU_CODE_KEY)
+    fun optionForKey(key: String): DebugOption? {
+        val allOptions = state.options.flatMap { it.value }
+        return allOptions.firstOrNull { it.key == key }
+    }
+
+    private suspend fun hasSetPassword(): Boolean {
+        val enteredCode = value<String>(DEBUG_MENU_CODE_KEY)
         return enteredCode == code
     }
 
