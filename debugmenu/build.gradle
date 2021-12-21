@@ -11,5 +11,5 @@ java {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$coroutines_version"
 }

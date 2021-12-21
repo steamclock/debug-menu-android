@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk rootProject.compile_sdk
 
     defaultConfig {
-        minSdk 21
-        targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        minSdk rootProject.min_sdk
+        targetSdk rootProject.target_sdk
+        versionCode rootProject.version_code
+        versionName rootProject.version_name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -33,6 +33,6 @@ android {
 
 dependencies {
     implementation project(":debugmenu")
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.core:core-ktx:$ktx_core_version"
+    implementation "androidx.datastore:datastore-preferences:$datastore_preferences"
 }

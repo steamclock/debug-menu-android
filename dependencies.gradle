@@ -1,0 +1,18 @@
+ext {
+    compile_sdk = 31
+    target_sdk = 31
+    min_sdk = 21
+    version_code = 1
+    version_name = "1.0"
+
+    kotlin_version = '1.5.31'
+    compose_version = '1.0.5'
+    coroutines_version = "1.5.2"
+    ktx_core_version = "1.7.0"
+    app_compat = "1.4.0"
+    material = "1.4.0"
+    lifecycle_runtime_ktx = "2.4.0"
+    activity_compose = "1.4.0"
+    datastore_preferences = "1.0.0"
+    auto_service = "1.0-rc4"
+}
