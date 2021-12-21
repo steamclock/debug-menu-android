@@ -220,7 +220,7 @@ ToggleMenu.testSelection.blockingValue() // blocking, returns String value
 Any attempt to show the DebugMenu will prompt the user to enter a password if they haven't done so previously.
 
 The `debugmenu-ui` provides extension functions for displaying the menu with a gesture in both Jetpack Compose and Android Views:
-```
+```kotlin
 // Jetpack Compose
 Text(
   text = "Build Info", 
