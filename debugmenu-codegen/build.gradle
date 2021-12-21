@@ -30,10 +30,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // configuration generator for service providers
-    implementation "com.google.auto.service:auto-service:1.0-rc4"
-    kapt "com.google.auto.service:auto-service:1.0-rc4"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.31"
+    implementation "com.google.auto.service:auto-service:$auto_service"
+    kapt "com.google.auto.service:auto-service:$auto_service"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 }
