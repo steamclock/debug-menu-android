@@ -25,25 +25,30 @@ import com.steamclock.debugmenu_annotation.*
 import com.steamclock.debugmenu_ui.showDebugMenuOnGesture
 import com.steamclock.debugmenusample.ui.theme.DebugmenuTheme
 
+private object Debug {
+    const val TestingMenu = "TestingMenu"
+    const val ButtonMenu = "ButtonMenu"
+}
+
 @DebugBoolean(title = "Enable easy debug menu")
 object EasyDebugMenuToggle
 
-@DebugAction(title = "Global action", menuKey = "TestingMenu")
+@DebugAction(title = "Global action", menuKey = Debug.TestingMenu)
 fun doGlobalAction() {
     Log.d("TAG", "doGlobalAction: ")
 }
 
 class MainActivity : AppCompatActivity() {
-    @DebugBoolean(title = "Show secret text", menuKey = "TestingMenu")
+    @DebugBoolean(title = "Show secret text", menuKey = Debug.TestingMenu)
     object ShowSecretTextToggle
 
-    @DebugBoolean(title = "Alt Button Text", menuKey = "ButtonMenu")
+    @DebugBoolean(title = "Alt Button Text", menuKey = Debug.ButtonMenu)
     object AltButtonTextToggle
 
-    @DebugBoolean(title = "Alt Button Colour", menuKey = "ButtonMenu")
+    @DebugBoolean(title = "Alt Button Colour", menuKey = Debug.ButtonMenu)
     object AltButtonColourToggle
 
-    @DebugAction(title = "Buttons Menu", menuKey = "TestingMenu")
+    @DebugAction(title = "Buttons Menu", menuKey = Debug.TestingMenu)
     fun showButtonsMenu() {
         ButtonMenu.show()
     }
