@@ -25,7 +25,12 @@ fun OptionSelection(selection: OptionSelection) {
     val expanded = remember { mutableStateOf(false) }
     val selectedIndex = DebugMenu.instance.flow<Int>(selection.key).collectAsState(initial = selection.defaultIndex)
     val selectedIndexValue = selectedIndex.value
-    val value = if (selectedIndexValue != null) selection.options[selectedIndexValue].toString() else ""
+    val defaultOption = selection.options[selection.defaultIndex ?: 0]
+
+    val value = if (selectedIndexValue != null)
+        selection.options.getOrNull(selectedIndexValue) ?: defaultOption
+    else
+        defaultOption
 
     Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween) {
@@ -52,7 +57,7 @@ fun OptionSelection(selection: OptionSelection) {
                         DebugMenu.instance.update(selection.key, index)
                     }
                 }) {
-                    Text(option.toString())
+                    Text(option)
                 }
             }
         }
