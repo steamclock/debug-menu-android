@@ -1,10 +1,17 @@
 # debug-menu-android
 A simple way to deploy a password-protected debug menu to your app.
+
+
 This repo includes 5 modules:
+
 **app** - A sample app demonstrating usage of the menu.
+
 **debugmenu** - The core framework for the debug menu, written in pure Kotlin
+
 **debugmenu-sharedprefs** - A persistence layer for debugmenu that can be used on Android, based on Datastore Preferences
+
 **debugmenu-ui** - A UI layer for debugmenu that can be used on Android, written in Jetpack Compose and hosted in a DialogFragment.
+
 **debugmenu-codegen** - The annotations and annotation processor used for compile-time safe usage of the menu.
 
 ![](1.png)
