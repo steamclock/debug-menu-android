@@ -26,7 +26,7 @@ afterEvaluate {
                 from components.java
 
                 // You can then customize attributes of the publication as shown below.
-                groupId = 'com.steamclock.debugmenu.debugmenu'
+                groupId = 'com.steamclock.debugmenu-core'
                 artifactId = 'release'
                 version = '1.0'
             }
