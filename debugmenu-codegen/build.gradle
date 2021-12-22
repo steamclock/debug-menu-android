@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
     id 'kotlin'
     id 'kotlin-kapt'
+    id 'maven-publish'
 }
 
 kapt {
@@ -36,4 +37,21 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.java
+
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.steamclock.debugmenu-codegen'
+                artifactId = 'release'
+                version = '1.0'
+            }
+        }
+    }
 }
