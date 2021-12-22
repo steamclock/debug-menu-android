@@ -1,7 +1,10 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'maven-publish'
 }
+
+group = "com.github.jacobminer"
 
 java {
     sourceCompatibility JavaVersion.VERSION_1_8
@@ -12,4 +15,18 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$coroutines_version"
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.steamclock.debugmenu'
+                artifactId = 'release'
+                version = '1.0'
+            }
+        }
+    }
 }
