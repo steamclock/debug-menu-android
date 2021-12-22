@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    implementation project(":debugmenu")
+    implementation project(':debugmenu-core')
     implementation "androidx.core:core-ktx:$ktx_core_version"
     implementation "androidx.datastore:datastore-preferences:$datastore_preferences"
 }

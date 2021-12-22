@@ -54,7 +54,7 @@ dependencies {
 
     implementation project(":debugmenu-ui")
     implementation project(":debugmenu-sharedprefs")
-    implementation project(":debugmenu")
+    implementation project(':debugmenu-core')
     implementation "androidx.core:core-ktx:$ktx_core_version"
     implementation "androidx.appcompat:appcompat:$app_compat"
     implementation "com.google.android.material:material:$material"

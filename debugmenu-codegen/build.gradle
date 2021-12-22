@@ -24,7 +24,7 @@ java {
 dependencies {
     kapt project(":debugmenu-annotation")
     implementation project(':debugmenu-annotation')
-    implementation project(':debugmenu')
+    implementation project(':debugmenu-core')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

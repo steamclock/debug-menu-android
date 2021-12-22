@@ -8,7 +8,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "debugmenu"
 include ':app'
-include ':debugmenu'
+include ':debugmenu-core'
 include ':debugmenu-ui'
 include ':debugmenu-sharedprefs'
 include ':debugmenu-annotation'
