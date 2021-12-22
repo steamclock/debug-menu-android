@@ -24,17 +24,17 @@ This repo includes 5 modules:
 [![](https://jitpack.io/v/steamclock/debug-menu-android.svg)](https://jitpack.io/#steamclock/debug-menu-android)
 
 1. Add this in your **root** build.gradle at the end of repositories:
-``` 
+```gradle
 allprojects {
     repositories {
-        ...
+        // other repositories
         maven { url 'https://jitpack.io' }
     }
 }
 ``` 
 
 2. Add dependencies in your app module's build.gradle:
-```
+```gradle
 // only necessary if you're using the annotations
 plugins {
     id 'kotlin-kapt'
