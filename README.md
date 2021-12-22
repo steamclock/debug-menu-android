@@ -6,7 +6,7 @@ This repo includes 5 modules:
 
 **app** - A sample app demonstrating usage of the menu.
 
-**debugmenu** - The core framework for the debug menu, written in pure Kotlin
+**debugmenu-core** - The core framework for the debug menu, written in pure Kotlin
 
 **debugmenu-sharedprefs** - A persistence layer for debugmenu that can be used on Android, based on Datastore Preferences
 
