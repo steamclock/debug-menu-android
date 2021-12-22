@@ -21,7 +21,40 @@ This repo includes 5 modules:
 ![](2.png)
 
 # Installation
-Coming soon...
+[![](https://jitpack.io/v/steamclock/debug-menu-android.svg)](https://jitpack.io/#steamclock/debug-menu-android)
+
+1. Add this in your **root** build.gradle at the end of repositories:
+``` 
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+``` 
+
+2. Add dependencies in your app module's build.gradle:
+```
+// only necessary if you're using the annotations
+plugins {
+    id 'kotlin-kapt'
+}
+
+dependencies {
+    implementation 'com.github.steamclock.debug-menu-android:core:<VERSION>'
+    implementation 'com.github.steamclock.debug-menu-android:sharedprefs:<VERSION>'
+    implementation 'com.github.steamclock.debug-menu-android:compose:<VERSION>'
+
+    // only necessary if you're using the annotations
+    kapt 'com.github.steamclock.debug-menu-android:codegen:<VERSION>'
+    implementation 'com.github.steamclock.debug-menu-android:annotation:<VERSION>'
+}
+```
+Most recent version can be found [here](https://github.com/steamclock/android-debug-menu/releases)
+
+3. Sync your project gradle files
+
+4. DebugMenu should now be available in the project.
 
 # Usage
 ## Initialization
