@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'maven-publish'
 }
 
 java {
@@ -22,5 +23,22 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.java
+
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.steamclock.debugmenu-annotation'
+                artifactId = 'release'
+                version = '1.0'
+            }
+        }
     }
 }
