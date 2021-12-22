@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.github.steamclock.debug-menu-android:sharedprefs:<VERSION>'
     implementation 'com.github.steamclock.debug-menu-android:compose:<VERSION>'
 
-    // only necessary if you're using the annotations
+    // these two dependencies are only necessary if you're using the annotations
     kapt 'com.github.steamclock.debug-menu-android:codegen:<VERSION>'
     implementation 'com.github.steamclock.debug-menu-android:annotation:<VERSION>'
 }
