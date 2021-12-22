@@ -27,7 +27,7 @@ afterEvaluate {
 
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.steamclock.debugmenu-core'
-                artifactId = 'release'
+                artifactId = 'core'
                 version = '1.0'
             }
         }

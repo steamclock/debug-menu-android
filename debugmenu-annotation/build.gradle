@@ -36,7 +36,7 @@ afterEvaluate {
 
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.steamclock.debugmenu-annotation'
-                artifactId = 'release'
+                artifactId = 'annotation'
                 version = '1.0'
             }
         }

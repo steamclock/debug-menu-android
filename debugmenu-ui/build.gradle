@@ -60,7 +60,7 @@ afterEvaluate {
 
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.steamclock.debugmenu-compose'
-                artifactId = 'release'
+                artifactId = 'compose'
                 version = '1.0'
             }
         }
