@@ -81,6 +81,15 @@ class MainActivity : AppCompatActivity() {
         return "This is testing text"
     }
 
+    @DebugSelectionProvider(title = "Annotated Selection")
+    fun temp2(): List<String> {
+        return listOf(
+            "testing 1",
+            "testing 2",
+            2.toString()
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -200,6 +200,7 @@ Adding options can be done using the following Annotations:
 | `@DebugAction`       | `Action`          | A button that will call the code provided |
 | `@DebugSelection`    | `OptionSelection` | A drop-down menu of string values         |
 | `@DebugTextProvider` | `TextDisplay`      | A string, useful for showing information |
+| `@DebugSelectionProvider` | `OptionSelection`      | A drop-down menu of string values |
 
 All annotations support optional `defaultValues` and `menuKey` parameters.
 
@@ -219,6 +220,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+}
 ```
 
 It's also possible to define an action scoped to a class using `@DebugAction`.
@@ -226,7 +228,7 @@ It's also possible to define an action scoped to a class using `@DebugAction`.
 class MainActivity : AppCompatActivity() {
     @DebugAction(title = "Scoped action")
     fun scopedGlobalAction() {
-        // can access MainActivity's state 
+        // can access MainActivity's state, is called when the onClick for the debug button is invoked 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -242,7 +244,29 @@ You can also provide a text provider, scoped to a class using `@DebugTextProvide
 class MainActivity : AppCompatActivity() {
     @DebugTextProvider
     fun textProvider(): String {
+        // string generated when `initDebugMenus()` is called
         return "Simple text provider"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        initDebugMenus() // generated extension function that must be called for scoped actions to appear
+    }
+}
+```
+
+
+You can also define an option selection provider, scoped to a class using `@DebugSelectionProvider`. `@DebugSelectionProvider` is currently only available when scoped to a class.
+```kotlin
+class MainActivity : AppCompatActivity() {
+    @DebugSelectionProvider
+    fun textProvider(): List<String> {
+        // list of options generated when `initDebugMenus()` is called
+        return listOf( 
+            "Option 1",
+            "Option 2",
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

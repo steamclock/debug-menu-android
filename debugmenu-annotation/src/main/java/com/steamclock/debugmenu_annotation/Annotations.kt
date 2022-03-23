@@ -39,3 +39,9 @@ annotation class DebugSelection(val title: String, val defaultIndex: Int = -1, v
 @Retention(AnnotationRetention.SOURCE)
 @MustBeDocumented
 annotation class DebugTextProvider(val menuKey: String = "")
+
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+@MustBeDocumented
+annotation class DebugSelectionProvider(val title: String, val defaultIndex: Int = -1, val menuKey: String = "")
+
