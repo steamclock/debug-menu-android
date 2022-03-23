@@ -72,7 +72,7 @@ class DebugMenu private constructor(private val code: String) {
             state.display.displayCodeEntry()
             return
         }
-        state.display.displayMenu(state.title, state.options[menu]!!)
+        state.display.displayMenu(state, menu)
     }
 
     fun optionForKey(key: String): DebugOption? {

@@ -17,14 +17,14 @@ import com.steamclock.debugmenu.*
  * Created by jake on 2021-12-06, 2:15 p.m.
  */
 @Composable
-fun Menu(title: String, options: List<DebugOption>) {
+fun Menu(state: DebugMenuState, menuKey: String) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = title,
             style = MaterialTheme.typography.h6,
             modifier = Modifier.padding(bottom = 24.dp)
         )
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            items(options) { option ->
+            items(state.options[menuKey]!!) { option ->
                 when (option) {
                     is Action -> ActionOption(option)
                     is BooleanValue -> BooleanOption(option)

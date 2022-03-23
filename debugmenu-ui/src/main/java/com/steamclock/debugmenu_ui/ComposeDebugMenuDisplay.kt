@@ -12,7 +12,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import com.steamclock.debugmenu.DebugMenu
-import com.steamclock.debugmenu.DebugOption
+import com.steamclock.debugmenu.DebugMenuState
 import com.steamclock.debugmenu.display.DebugMenuDisplay
 import com.steamclock.debugmenu_ui.components.CodeEntry
 import com.steamclock.debugmenu_ui.components.Menu
@@ -58,11 +58,11 @@ class ComposeDebugMenuDisplay(app: Application) : DebugMenuDisplay {
         dialog.show(activity.supportFragmentManager, null)
     }
 
-    override suspend fun displayMenu(title: String, options: List<DebugOption>) {
+    override suspend fun displayMenu(state: DebugMenuState, menuKey: String) {
         showDialog {
             MaterialTheme(colors = if (isSystemInDarkTheme()) darkColors() else lightColors()) {
                 Surface {
-                    Menu(title, options)
+                    Menu(state, menuKey)
                 }
             }
         }
