@@ -39,6 +39,7 @@ fun Menu(state: DebugMenuState, menuKey: String) {
                     is IntValue -> IntOption(option)
                     is LongValue -> LongOption(option)
                     is OptionSelection -> OptionSelection(option)
+                    is TextDisplay -> TextOption(option)
                 }
             }
         }

@@ -27,6 +27,9 @@ class LogDisplay: DebugMenuDisplay {
                     val value = if (index != null) it.options[index] else null
                     println("   ${it.title} - $value")
                 }
+                is TextDisplay -> {
+                    println("   ${it.text}")
+                }
             }
         }
         println("Footer: ${state.footer}")
