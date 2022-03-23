@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                         showSecretText = showSecretText.value,
                         altButtonText = useAltButtonText.value,
                         altButtonColour = useAltButtonColour.value,
-                        selection = temp2Selection.value)
+                        selection = temp2Selection.value ?: "")
                 }
             }
         }

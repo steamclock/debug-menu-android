@@ -68,10 +68,10 @@ internal class MenuClassBuilder(
                 }
                 is SelectionProviderWrapper -> {
                     """
-        val ${it.key}Selection = DebugValue(flow<String> {
-            DebugMenu.instance.flow<Int>("${it.key}").collect {
+        val ${it.key}Selection = DebugValue(flow<String?> {
+            DebugMenu.instance.flow<Int?>("${it.key}").collect {
                 val option = (DebugMenu.instance.optionForKey("${it.key}") as? OptionSelection) ?: return@collect
-                emit(option.options.get(it))
+                emit(if (it != null) option.options.get(it) else null)
             }
         })
                     """
@@ -95,10 +95,10 @@ internal class MenuClassBuilder(
                 is SelectionWrapper -> {
                     val toggle = it.selectionValue
 """
-        val ${toggle.key} = DebugValue(flow<String> {
-            DebugMenu.instance.flow<Int>("${toggle.key}").collect {
+        val ${toggle.key} = DebugValue(flow<String?> {
+            DebugMenu.instance.flow<Int?>("${toggle.key}").collect {
                 val option = (DebugMenu.instance.optionForKey("${toggle.key}") as? OptionSelection) ?: return@collect
-                emit(option.options.get(it))
+                emit(if (it != null) option.options.get(it) else null)
             }
         })
 """

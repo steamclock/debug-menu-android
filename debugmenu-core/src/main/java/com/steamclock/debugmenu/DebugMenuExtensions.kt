@@ -24,7 +24,7 @@ suspend inline fun <reified T: Any> DebugMenu.value(key: String): T? {
     return state.persistence.readValue(key)
 }
 
-inline fun <reified T: Any> DebugMenu.flow(key: String): Flow<T> {
+inline fun <reified T: Any?> DebugMenu.flow(key: String): Flow<T> {
     return state.persistence.flowValue(key)
 }
 
