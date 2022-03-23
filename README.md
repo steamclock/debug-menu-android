@@ -41,16 +41,16 @@ plugins {
 }
 
 dependencies {
-    implementation 'com.github.steamclock.debug-menu-android:core:<VERSION>'
-    implementation 'com.github.steamclock.debug-menu-android:sharedprefs:<VERSION>'
-    implementation 'com.github.steamclock.debug-menu-android:compose:<VERSION>'
+    implementation "com.github.steamclock.debug-menu-android:core:<VERSION>"
+    implementation "com.github.steamclock.debug-menu-android:sharedprefs:<VERSION>"
+    implementation "com.github.steamclock.debug-menu-android:compose:<VERSION>"
 
     // these two dependencies are only necessary if you're using the annotations
-    kapt 'com.github.steamclock.debug-menu-android:codegen:<VERSION>'
-    implementation 'com.github.steamclock.debug-menu-android:annotation:<VERSION>'
+    kapt "com.github.steamclock.debug-menu-android:codegen:<VERSION>"
+    implementation "com.github.steamclock.debug-menu-android:annotation:<VERSION>"
 }
 ```
-Most recent version can be found [here](https://github.com/steamclock/android-debug-menu/releases)
+Most recent version can be found [here](https://github.com/steamclock/debug-menu-android/releases)
 
 3. Sync your project gradle files
 
