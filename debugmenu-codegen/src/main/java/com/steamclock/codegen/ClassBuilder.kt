@@ -199,6 +199,7 @@ internal class MenuClassBuilder(
                 }
 
                     """
+        @Suppress("UNCHECKED_CAST")
         fun initialize(parent: $parentName) = runBlocking {
             instance.${parentName}Ref = WeakReference(parent)
         $actionStrings
