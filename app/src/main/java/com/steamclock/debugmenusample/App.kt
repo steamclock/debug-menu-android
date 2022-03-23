@@ -13,6 +13,7 @@ import com.steamclock.debugmenu_ui.ComposeDebugMenuDisplay
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
+        // 123321
         DebugMenu.initialize("a320480f534776bddb5cdb54b1e93d210a3c7d199e80a23c1b2178497b184c76",
             ComposeDebugMenuDisplay(this),
             SharedPrefsPersistence(this)

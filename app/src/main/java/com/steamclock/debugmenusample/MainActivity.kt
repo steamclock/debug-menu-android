@@ -70,6 +70,12 @@ class MainActivity : AppCompatActivity() {
         TestingMenu.show()
     }
 
+
+    @DebugAction(title = "Show Testing Menu2")
+    fun showTestingMenu2() {
+        TestingMenu.show()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
