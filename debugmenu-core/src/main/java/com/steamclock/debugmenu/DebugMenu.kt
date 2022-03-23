@@ -72,7 +72,7 @@ class DebugMenu private constructor(private val code: String) {
             state.display.displayCodeEntry()
             return
         }
-        state.display.displayMenu(state.title, state.options[menu]!!)
+        state.display.displayMenu(state, menu)
     }
 
     fun optionForKey(key: String): DebugOption? {
@@ -97,11 +97,13 @@ class DebugMenu private constructor(private val code: String) {
                 throw RuntimeException("Call initialize before usage")
             }
 
-        fun initialize(encryptedCode: String, display: DebugMenuDisplay, persistence: DebugMenuPersistence) {
+        fun initialize(encryptedCode: String, display: DebugMenuDisplay, persistence: DebugMenuPersistence, header: String? = null, footer: String? = null) {
             val previousState = _instance?.state ?: DebugMenuState(title = "Debug Menu")
             val newState = previousState.copy(
                 display = display,
-                persistence = persistence
+                persistence = persistence,
+                header = header,
+                footer = footer
             )
             _instance = DebugMenu(encryptedCode)
             _instance?.state = newState

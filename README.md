@@ -66,7 +66,9 @@ class App: Application() {
         super.onCreate()
         DebugMenu.initialize("5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
             ComposeDebugMenuDisplay(this),
-            SharedPrefsPersistence(this)
+            SharedPrefsPersistence(this),
+            header = "", // optional header to display on all debug menus
+            footer = "" // optional footer to display on all debug menus
         )
     }
 }
@@ -84,6 +86,7 @@ Currently the following options are supported:
 | `LongValue`       | An input field for long values            | `0L`    |
 | `Action`          | A button that will call the code provided | n/a   |
 | `OptionSelection` | A drop-down menu of string values         | `null`  |
+| `TextDisplay`     | A string, useful for showing information  | n/a  |
 
 ## Manual Usage
 ### Adding Options
@@ -119,6 +122,9 @@ class MainActivity : AppCompatActivity() {
                     key = "test-selection",
                     options = listOf("value1", "value2"),
                     defaultIndex = null
+                ),
+                TextDisplay(
+                    text = "Test display text"
                 )
             )    
         }
@@ -186,13 +192,15 @@ Because the all annotated menu options are added at compile time, it's recommend
 Adding options can be done using the following Annotations:
 
 | Annotation   | `BooleanValue`    | UI Shown                       |
-|-------------------|-------------------|-------------------------------------------|
-| `@DebugBoolean`   | `BooleanValue`    | A true/false toggle                       |
-| `@DebugInt`       | `IntValue`        | An input field for integer values         |
-| `@DebugDouble`    | `DoubleValue`     | An input field for double values          |
-| `@DebugLong`      | `LongValue`       | An input field for long values            |
-| `@DebugAction`    | `Action`          | A button that will call the code provided |
-| `@DebugSelection` | `OptionSelection` | A drop-down menu of string values         |
+|----------------------|-------------------|-------------------------------------------|
+| `@DebugBoolean`      | `BooleanValue`    | A true/false toggle                       |
+| `@DebugInt`          | `IntValue`        | An input field for integer values         |
+| `@DebugDouble`       | `DoubleValue`     | An input field for double values          |
+| `@DebugLong`         | `LongValue`       | An input field for long values            |
+| `@DebugAction`       | `Action`          | A button that will call the code provided |
+| `@DebugSelection`    | `OptionSelection` | A drop-down menu of string values         |
+| `@DebugTextProvider` | `TextDisplay`      | A string, useful for showing information |
+| `@DebugSelectionProvider` | `OptionSelection`      | A drop-down menu of string values |
 
 All annotations support optional `defaultValues` and `menuKey` parameters.
 
@@ -220,7 +228,45 @@ It's also possible to define an action scoped to a class using `@DebugAction`.
 class MainActivity : AppCompatActivity() {
     @DebugAction(title = "Scoped action")
     fun scopedGlobalAction() {
-        // can access MainActivity's state 
+        // can access MainActivity's state, is called when the onClick for the debug button is invoked 
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        initDebugMenus() // generated extension function that must be called for scoped actions to appear
+    }
+}
+```
+
+You can also provide a text provider, scoped to a class using `@DebugTextProvider`. `@DebugTextProvider` is currently only available when scoped to a class.
+```kotlin
+class MainActivity : AppCompatActivity() {
+    @DebugTextProvider
+    fun textProvider(): String {
+        // string generated when `initDebugMenus()` is called
+        return "Simple text provider"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        initDebugMenus() // generated extension function that must be called for scoped actions to appear
+    }
+}
+```
+
+
+You can also define an option selection provider, scoped to a class using `@DebugSelectionProvider`. `@DebugSelectionProvider` is currently only available when scoped to a class.
+```kotlin
+class MainActivity : AppCompatActivity() {
+    @DebugSelectionProvider
+    fun textProvider(): List<String> {
+        // list of options generated when `initDebugMenus()` is called
+        return listOf( 
+            "Option 1",
+            "Option 2",
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

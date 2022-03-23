@@ -7,9 +7,10 @@ import com.steamclock.debugmenu.*
  * Created by jake on 2021-12-06, 1:56 p.m.
  */
 class LogDisplay: DebugMenuDisplay {
-    override suspend fun displayMenu(title: String, options: List<DebugOption>) {
-        println("Debug Menu: $title")
-        options.forEach {
+    override suspend fun displayMenu(state: DebugMenuState, menuKey: String) {
+        println("Debug Menu: ${state.title}")
+        println("Header: ${state.header}")
+        state.options[menuKey]?.forEach {
             when (it) {
                 is Action ->
                     println("   ${it.title} - Action")
@@ -26,9 +27,12 @@ class LogDisplay: DebugMenuDisplay {
                     val value = if (index != null) it.options[index] else null
                     println("   ${it.title} - $value")
                 }
+                is TextDisplay -> {
+                    println("   ${it.text}")
+                }
             }
-
         }
+        println("Footer: ${state.footer}")
     }
 
     override suspend fun displayCodeEntry() {

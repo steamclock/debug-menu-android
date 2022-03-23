@@ -20,6 +20,8 @@ internal data class DoubleWrapper(val doubleValue: DoubleValue): AnnotationWrapp
 internal data class LongWrapper(val longValue: LongValue): AnnotationWrapper()
 internal data class SelectionWrapper(val selectionValue: OptionSelection): AnnotationWrapper()
 internal data class ActionWrapper(val title: String, val functionName: String, val parentClass: String, val packageName: String, val isGlobal: Boolean): AnnotationWrapper()
+internal data class TextValueWrapper(val functionName: String, val parentClass: String, val packageName: String): AnnotationWrapper()
+internal data class SelectionProviderWrapper(val title: String, val key: String, val defaultIndex: Int? = null, val functionName: String, val parentClass: String, val packageName: String): AnnotationWrapper()
 
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
@@ -53,7 +55,9 @@ class FileGenerator : AbstractProcessor() {
             DebugDouble::class.java.name,
             DebugLong::class.java.name,
             DebugAction::class.java.name,
-            DebugSelection::class.java.name
+            DebugSelection::class.java.name,
+            DebugTextProvider::class.java.name,
+            DebugSelectionProvider::class.java.name
         )
     }
 
@@ -144,6 +148,33 @@ class FileGenerator : AbstractProcessor() {
             val isGlobal = parentClass.endsWith("Kt")
             val packageName = parentClass.split(".").dropLast(1).joinToString(".")
             addOptionToMenu(menuKey, ActionWrapper(title = title, functionName = functionName, parentClass = parentClass, isGlobal = isGlobal, packageName = packageName))
+        }
+        if (result == false) return false
+
+        result = roundEnvironment?.forEach(DebugTextProvider::class.java, validKind = ElementKind.METHOD) { element, annotation ->
+            val menuKey = annotation.menuKey
+            val functionName = element.simpleName.toString()
+            val parentClass = element.enclosingElement.toString()
+            val packageName = parentClass.split(".").dropLast(1).joinToString(".")
+            addOptionToMenu(menuKey, TextValueWrapper(functionName = functionName, parentClass = parentClass, packageName = packageName))
+        }
+        if (result == false) return false
+
+        result = roundEnvironment?.forEach(DebugSelectionProvider::class.java, validKind = ElementKind.METHOD) { element, annotation ->
+            val menuKey = annotation.menuKey
+            val functionName = element.simpleName.toString()
+            val parentClass = element.enclosingElement.toString()
+            val packageName = parentClass.split(".").dropLast(1).joinToString(".")
+            val name = element.simpleName.toString()
+            val title = annotation.title
+            val defaultValue = annotation.defaultIndex
+
+            // annotations can't include null, so we use -1 instead to represent the same state
+            val correctedDefaultValue = if (defaultValue == -1) null else defaultValue
+
+            addOptionToMenu(menuKey, SelectionProviderWrapper(
+                title = title, key = name, defaultIndex = correctedDefaultValue,
+                functionName = functionName, parentClass = parentClass, packageName = packageName))
         }
         if (result == false) return false
 

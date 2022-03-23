@@ -34,3 +34,14 @@ annotation class DebugDouble(val title: String, val defaultValue: Double = 0.0, 
 @Retention(AnnotationRetention.SOURCE)
 @MustBeDocumented
 annotation class DebugSelection(val title: String, val defaultIndex: Int = -1, val menuKey: String = "", val options: Array<String>)
+
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+@MustBeDocumented
+annotation class DebugTextProvider(val menuKey: String = "")
+
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+@MustBeDocumented
+annotation class DebugSelectionProvider(val title: String, val defaultIndex: Int = -1, val menuKey: String = "")
+

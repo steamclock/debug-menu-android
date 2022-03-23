@@ -1,11 +1,5 @@
 package com.steamclock.codegen
 
-import com.steamclock.debugmenu.DebugMenu
-import com.steamclock.debugmenu.OptionSelection
-import com.steamclock.debugmenu.flow
-import com.steamclock.debugmenu_annotation.DebugValue
-import kotlinx.coroutines.flow.mapNotNull
-
 internal class MenuClassBuilder(
     private val menuKey: String,
     private val menuName: String,
@@ -54,6 +48,12 @@ internal class MenuClassBuilder(
                         "OptionSelection(title = \"${selection.title}\", key = \"${selection.key}\", options = listOf(${options}), defaultIndex = ${selection.defaultIndex})"
                     "DebugMenu.instance.addOptions(key, $text)"
                 }
+                is TextValueWrapper -> {
+                    ""
+                }
+                is SelectionProviderWrapper -> {
+                    ""
+                }
             }
         }
 
@@ -61,6 +61,12 @@ internal class MenuClassBuilder(
         get() = options.joinToString("\n        ") {
             when (it) {
                 is ActionWrapper -> {
+                    ""
+                }
+                is TextValueWrapper -> {
+                    ""
+                }
+                is SelectionProviderWrapper -> {
                     ""
                 }
                 is BooleanWrapper -> {
@@ -106,12 +112,33 @@ internal class MenuClassBuilder(
                 .groupBy { it.parentClass }
         }
 
-    private val referencedParents: Set<String>
+    private val textProviderByParents: Map<String, List<TextValueWrapper>>
         get() {
             return options
+                .filterIsInstance<TextValueWrapper>()
+                .groupBy { it.parentClass }
+        }
+
+    private val selectionProviderByParents: Map<String, List<SelectionProviderWrapper>>
+        get() {
+            return options
+                .filterIsInstance<SelectionProviderWrapper>()
+                .groupBy { it.parentClass }
+        }
+
+    private val referencedParents: Set<String>
+        get() {
+            val actions = options
                 .filterIsInstance<ActionWrapper>()
                 .filter { !it.isGlobal }
-                .map { it.parentClass }.toSet()
+                .map { it.parentClass }
+            val textProviders = options
+                .filterIsInstance<TextValueWrapper>()
+                .map { it.parentClass }
+            val selectionProviders = options
+                .filterIsInstance<SelectionProviderWrapper>()
+                .map { it.parentClass }
+            return (actions + textProviders + selectionProviders).toSet()
         }
 
     private val weakReferences: String
@@ -128,9 +155,11 @@ internal class MenuClassBuilder(
 
     private val initFunctions: String
         get() {
-            return actionsByParents.keys.joinToString(separator = "\n        ") { parent ->
-                val actions = actionsByParents[parent] ?: listOf()
+            return referencedParents.joinToString(separator = "\n        ") { parent ->
                 val parentName = parent.split(".").last()
+                val actions = actionsByParents[parent] ?: listOf()
+                val textProviders = textProviderByParents[parent] ?: listOf()
+                val selectionProviders = selectionProviderByParents[parent] ?: listOf()
 
                 val actionStrings = actions.joinToString("") {
                     """
@@ -141,12 +170,43 @@ internal class MenuClassBuilder(
                     """
                 }
 
-                """
+                val textProviderStrings = textProviders.joinToString("") {
+                        """
+            val ${it.functionName}Text = instance.${parentName}Ref?.get()?.${it.functionName}() as? Any
+            if (${it.functionName}Text !is String) {
+                throw Exception("${parent}.${it.functionName} is marked as a StringValueProvider, it must return a String value")
+            }
+            val ${it.functionName}TextProvider = TextDisplay(text = ${it.functionName}Text)
+            DebugMenu.instance.addOptions(key, ${it.functionName}TextProvider)    
+                    """
+                }
+
+                val selectionProviderStrings = selectionProviders.joinToString("") {
+                    """
+            val ${it.functionName}Selections = instance.${parentName}Ref?.get()?.${it.functionName}() as? Any
+            if (${it.functionName}Selections !is List<*>) {
+                throw Exception("${parent}.${it.functionName} is marked as a DebugSelectionProvider, it must return a List<String> value")
+            }
+            ${it.functionName}Selections.forEach { 
+                if (it !is String) {
+                    throw Exception("${parent}.${it.functionName} is marked as a DebugSelectionProvider, it must return a List<String> value")
+                }
+            }
+            
+            val ${it.functionName}Selection = OptionSelection(title = "${it.title}", key = "${it.key}", options = ${it.functionName}Selections as List<String>, defaultIndex = ${it.defaultIndex})
+            DebugMenu.instance.addOptions(key, ${it.functionName}Selection)    
+                    """
+                }
+
+                    """
+        @Suppress("UNCHECKED_CAST")
         fun initialize(parent: $parentName) = runBlocking {
             instance.${parentName}Ref = WeakReference(parent)
         $actionStrings
-        }
-                """
+        $textProviderStrings
+        $selectionProviderStrings
+        }  
+                    """
             }
         }
 
@@ -190,6 +250,6 @@ class $menuName private constructor() {
 
     fun generatedInitFunctions(): Pair<String, List<String>> {
         // DebugMenu -> MainActivity, SettingsActivity
-        return menuName to actionsByParents.keys.map { parent -> parent }
+        return menuName to referencedParents.map { parent -> parent }
     }
 }

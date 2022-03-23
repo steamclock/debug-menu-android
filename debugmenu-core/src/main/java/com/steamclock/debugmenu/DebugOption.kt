@@ -11,3 +11,4 @@ data class DoubleValue(override val title: String, override val key: String, val
 data class LongValue(override val title: String, override val key: String, val defaultValue: Long = 0L): DebugOption(title, key)
 data class Action(override val title: String, val onClick: suspend () -> Unit): DebugOption(title, title)
 data class OptionSelection(override val title: String, override val key: String, val options: List<String>, val defaultIndex: Int? = null): DebugOption(title, key)
+data class TextDisplay(val text: String): DebugOption(text, "")
