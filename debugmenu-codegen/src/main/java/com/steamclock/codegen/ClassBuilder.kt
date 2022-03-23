@@ -54,6 +54,9 @@ internal class MenuClassBuilder(
                         "OptionSelection(title = \"${selection.title}\", key = \"${selection.key}\", options = listOf(${options}), defaultIndex = ${selection.defaultIndex})"
                     "DebugMenu.instance.addOptions(key, $text)"
                 }
+                is TextValueWrapper -> {
+                    ""
+                }
             }
         }
 
@@ -61,6 +64,9 @@ internal class MenuClassBuilder(
         get() = options.joinToString("\n        ") {
             when (it) {
                 is ActionWrapper -> {
+                    ""
+                }
+                is TextValueWrapper -> {
                     ""
                 }
                 is BooleanWrapper -> {
@@ -106,12 +112,23 @@ internal class MenuClassBuilder(
                 .groupBy { it.parentClass }
         }
 
-    private val referencedParents: Set<String>
+    private val textProviderByParents: Map<String, List<TextValueWrapper>>
         get() {
             return options
+                .filterIsInstance<TextValueWrapper>()
+                .groupBy { it.parentClass }
+        }
+
+    private val referencedParents: Set<String>
+        get() {
+            val actions = options
                 .filterIsInstance<ActionWrapper>()
                 .filter { !it.isGlobal }
-                .map { it.parentClass }.toSet()
+                .map { it.parentClass }
+            val textProviders = options
+                .filterIsInstance<TextValueWrapper>()
+                .map { it.parentClass }
+            return (actions + textProviders).toSet()
         }
 
     private val weakReferences: String
@@ -128,9 +145,10 @@ internal class MenuClassBuilder(
 
     private val initFunctions: String
         get() {
-            return actionsByParents.keys.joinToString(separator = "\n        ") { parent ->
-                val actions = actionsByParents[parent] ?: listOf()
+            return referencedParents.joinToString(separator = "\n        ") { parent ->
                 val parentName = parent.split(".").last()
+                val actions = actionsByParents[parent] ?: listOf()
+                val textProviders = textProviderByParents[parent] ?: listOf()
 
                 val actionStrings = actions.joinToString("") {
                     """
@@ -141,12 +159,24 @@ internal class MenuClassBuilder(
                     """
                 }
 
-                """
+                val providerStrings = textProviders.joinToString("") {
+                        """
+            val ${it.functionName}Text = instance.${parentName}Ref?.get()?.${it.functionName}() as? Any
+            if (${it.functionName}Text !is String) {
+                throw Exception("${parent}.${it.functionName} is marked as a StringValueProvider, it must return a String value")
+            }
+            val ${it.functionName}TextProvider = TextDisplay(text = instance.${parentName}Ref?.get()?.${it.functionName}() as String)
+            DebugMenu.instance.addOptions(key, ${it.functionName}TextProvider)    
+                    """
+                }
+
+                    """
         fun initialize(parent: $parentName) = runBlocking {
             instance.${parentName}Ref = WeakReference(parent)
         $actionStrings
-        }
-                """
+        $providerStrings
+        }  
+                    """
             }
         }
 

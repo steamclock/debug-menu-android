@@ -76,6 +76,11 @@ class MainActivity : AppCompatActivity() {
         TestingMenu.show()
     }
 
+    @DebugTextProvider
+    fun temp(): String {
+        return 3.toString()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
