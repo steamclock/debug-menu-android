@@ -19,10 +19,17 @@ import com.steamclock.debugmenu.*
 @Composable
 fun Menu(state: DebugMenuState, menuKey: String) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = title,
+        Text(text = state.title,
             style = MaterialTheme.typography.h6,
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
+        if (state.header != null) {
+            Text(
+                text = state.header!!,
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+        }
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             items(state.options[menuKey]!!) { option ->
                 when (option) {
@@ -34,6 +41,13 @@ fun Menu(state: DebugMenuState, menuKey: String) {
                     is OptionSelection -> OptionSelection(option)
                 }
             }
+        }
+        if (state.footer != null) {
+            Text(
+                text = state.footer!!,
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier.padding(top = 24.dp)
+            )
         }
     }
 }

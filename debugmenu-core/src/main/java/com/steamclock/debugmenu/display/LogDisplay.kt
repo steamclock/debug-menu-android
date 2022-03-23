@@ -7,8 +7,9 @@ import com.steamclock.debugmenu.*
  * Created by jake on 2021-12-06, 1:56 p.m.
  */
 class LogDisplay: DebugMenuDisplay {
-        println("Debug Menu: $title")
     override suspend fun displayMenu(state: DebugMenuState, menuKey: String) {
+        println("Debug Menu: ${state.title}")
+        println("Header: ${state.header}")
         state.options[menuKey]?.forEach {
             when (it) {
                 is Action ->
@@ -27,8 +28,8 @@ class LogDisplay: DebugMenuDisplay {
                     println("   ${it.title} - $value")
                 }
             }
-
         }
+        println("Footer: ${state.footer}")
     }
 
     override suspend fun displayCodeEntry() {
