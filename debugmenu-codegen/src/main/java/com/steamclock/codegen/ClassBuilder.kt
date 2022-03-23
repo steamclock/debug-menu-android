@@ -220,6 +220,6 @@ class $menuName private constructor() {
 
     fun generatedInitFunctions(): Pair<String, List<String>> {
         // DebugMenu -> MainActivity, SettingsActivity
-        return menuName to actionsByParents.keys.map { parent -> parent }
+        return menuName to referencedParents.map { parent -> parent }
     }
 }
