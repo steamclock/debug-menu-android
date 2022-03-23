@@ -165,7 +165,6 @@ class FileGenerator : AbstractProcessor() {
             val functionName = element.simpleName.toString()
             val parentClass = element.enclosingElement.toString()
             val packageName = parentClass.split(".").dropLast(1).joinToString(".")
-            val name = element.simpleName.toString()
             val title = annotation.title
             val defaultValue = annotation.defaultIndex
 
@@ -173,7 +172,7 @@ class FileGenerator : AbstractProcessor() {
             val correctedDefaultValue = if (defaultValue == -1) null else defaultValue
 
             addOptionToMenu(menuKey, SelectionProviderWrapper(
-                title = title, key = name, defaultIndex = correctedDefaultValue,
+                title = title, key = functionName, defaultIndex = correctedDefaultValue,
                 functionName = functionName, parentClass = parentClass, packageName = packageName))
         }
         if (result == false) return false

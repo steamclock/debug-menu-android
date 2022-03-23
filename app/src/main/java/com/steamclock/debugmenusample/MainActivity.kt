@@ -17,6 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.lifecycleScope
+import com.steamclock.debugmenu.DebugMenu
+import com.steamclock.debugmenu.OptionSelection
+import com.steamclock.debugmenu.flow
 import com.steamclock.debugmenu.generated.ButtonMenu
 import com.steamclock.debugmenu.generated.GlobalDebugMenu
 import com.steamclock.debugmenu.generated.TestingMenu
@@ -24,6 +28,10 @@ import com.steamclock.debugmenu.generated.initDebugMenus
 import com.steamclock.debugmenu_annotation.*
 import com.steamclock.debugmenu_ui.showDebugMenuOnGesture
 import com.steamclock.debugmenusample.ui.theme.DebugmenuTheme
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 
 private object Debug {
     const val TestingMenu = "TestingMenu"
@@ -95,6 +103,13 @@ class MainActivity : AppCompatActivity() {
 
         initDebugMenus()
 
+        lifecycleScope.launch {
+            DebugMenu.instance.flow<Int>("temp2").collect {
+                val option = (DebugMenu.instance.optionForKey("temp2") as? OptionSelection) ?: return@collect
+                option.options.get(it)
+            }
+        }
+
         setContent {
             DebugmenuTheme {
                 Surface(color = MaterialTheme.colors.background) {
@@ -102,11 +117,13 @@ class MainActivity : AppCompatActivity() {
                     val showSecretText = TestingMenu.ShowSecretTextToggle.flow.collectAsState(initial = false)
                     val useAltButtonText = ButtonMenu.AltButtonTextToggle.flow.collectAsState(initial = false)
                     val useAltButtonColour = ButtonMenu.AltButtonColourToggle.flow.collectAsState(initial = false)
+                    val temp2Selection = GlobalDebugMenu.temp2Selection.flow.collectAsState(initial = "")
                     DebugMenuSample(
                         easyDebugMenuToggle = easyDebugMenuToggle.value,
                         showSecretText = showSecretText.value,
                         altButtonText = useAltButtonText.value,
-                        altButtonColour = useAltButtonColour.value)
+                        altButtonColour = useAltButtonColour.value,
+                        selection = temp2Selection.value)
                 }
             }
         }
@@ -114,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun DebugMenuSample(easyDebugMenuToggle: Boolean, showSecretText: Boolean, altButtonText: Boolean, altButtonColour: Boolean) {
+fun DebugMenuSample(easyDebugMenuToggle: Boolean, showSecretText: Boolean, altButtonText: Boolean, altButtonColour: Boolean, selection: String) {
     val context = LocalContext.current
     Column(verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.padding(16.dp)) {
@@ -145,5 +162,6 @@ fun DebugMenuSample(easyDebugMenuToggle: Boolean, showSecretText: Boolean, altBu
                 it.showDebugMenuOnGesture(ButtonMenu.key, longPressDuration = 1000L * seconds)
             })
         }
+        Text(selection)
     }
 }

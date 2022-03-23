@@ -67,7 +67,14 @@ internal class MenuClassBuilder(
                     ""
                 }
                 is SelectionProviderWrapper -> {
-                    ""
+                    """
+        val ${it.key}Selection = DebugValue(flow<String> {
+            DebugMenu.instance.flow<Int>("${it.key}").collect {
+                val option = (DebugMenu.instance.optionForKey("${it.key}") as? OptionSelection) ?: return@collect
+                emit(option.options.get(it))
+            }
+        })
+                    """
                 }
                 is BooleanWrapper -> {
                     val toggle = it.toggle
@@ -88,9 +95,11 @@ internal class MenuClassBuilder(
                 is SelectionWrapper -> {
                     val toggle = it.selectionValue
 """
-        val ${toggle.key} = DebugValue<String>(DebugMenu.instance.flow<Int>("${toggle.key}").mapNotNull {
-            val option = (DebugMenu.instance.optionForKey("${toggle.key}") as? OptionSelection) ?: return@mapNotNull null
-            option.options[it]
+        val ${toggle.key} = DebugValue(flow<String> {
+            DebugMenu.instance.flow<Int>("${toggle.key}").collect {
+                val option = (DebugMenu.instance.optionForKey("${toggle.key}") as? OptionSelection) ?: return@collect
+                emit(option.options.get(it))
+            }
         })
 """
                 }
@@ -218,6 +227,8 @@ import kotlinx.coroutines.runBlocking
 import com.steamclock.debugmenu_annotation.DebugValue
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.collect
 $parentImports
 $globalActionImports
 
