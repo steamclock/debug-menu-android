@@ -76,9 +76,9 @@ class MainActivity : AppCompatActivity() {
         TestingMenu.show()
     }
 
-    @DebugTextProvider
+    @DebugTextProvider(menuKey = Debug.TestingMenu)
     fun temp(): String {
-        return 3.toString()
+        return "This is testing text"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
