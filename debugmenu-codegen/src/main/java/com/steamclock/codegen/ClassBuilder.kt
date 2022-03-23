@@ -128,16 +128,16 @@ internal class MenuClassBuilder(
 
     private val initFunctions: String
         get() {
-            return actionsByParents.keys.joinToString("\n        ") { parent ->
+            return actionsByParents.keys.joinToString(separator = "\n        ") { parent ->
                 val actions = actionsByParents[parent] ?: listOf()
                 val parentName = parent.split(".").last()
 
-                val actionStrings = actions.joinToString {
+                val actionStrings = actions.joinToString("") {
                     """
-            val action = Action(title = "${it.title}", onClick = {
+            val ${it.functionName}Action = Action(title = "${it.title}", onClick = {
                 instance.${parentName}Ref?.get()?.${it.functionName}()
             })
-            DebugMenu.instance.addOptions(key, action)    
+            DebugMenu.instance.addOptions(key, ${it.functionName}Action)    
                     """
                 }
 
