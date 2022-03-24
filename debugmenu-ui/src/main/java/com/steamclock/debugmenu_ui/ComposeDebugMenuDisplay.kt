@@ -33,13 +33,16 @@ class ComposeDebugMenuDisplay(app: Application) : DebugMenuDisplay {
     private fun monitor(application: Application) {
         application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(p0: Activity, p1: Bundle?) {
-                activityReference = WeakReference(p0 as AppCompatActivity)
+                val activity = p0 as? AppCompatActivity
+                activityReference = WeakReference(activity)
             }
             override fun onActivityStarted(p0: Activity) {
-                activityReference = WeakReference(p0 as AppCompatActivity)
+                val activity = p0 as? AppCompatActivity
+                activityReference = WeakReference(activity)
             }
             override fun onActivityResumed(p0: Activity) {
-                activityReference = WeakReference(p0 as AppCompatActivity)
+                val activity = p0 as? AppCompatActivity
+                activityReference = WeakReference(activity)
             }
             override fun onActivityPaused(p0: Activity) {
                 activityReference = null
