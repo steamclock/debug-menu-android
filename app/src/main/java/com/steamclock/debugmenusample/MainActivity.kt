@@ -29,6 +29,7 @@ import com.steamclock.debugmenu_annotation.*
 import com.steamclock.debugmenu_ui.showDebugMenuOnGesture
 import com.steamclock.debugmenusample.ui.theme.DebugmenuTheme
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
@@ -104,8 +105,9 @@ class MainActivity : AppCompatActivity() {
         initDebugMenus()
 
         lifecycleScope.launch {
-            DebugMenu.instance.flow<Int>("temp2").collect {
-                val option = (DebugMenu.instance.optionForKey("temp2") as? OptionSelection) ?: return@collect
+            DebugMenu.instance.flow<Int?>("temp2").collectLatest {
+                val option = (DebugMenu.instance.optionForKey("temp2") as? OptionSelection) ?: return@collectLatest
+                if(it == null) return@collectLatest
                 option.options.get(it)
             }
         }

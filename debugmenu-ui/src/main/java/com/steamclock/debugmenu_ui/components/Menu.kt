@@ -32,14 +32,16 @@ fun Menu(state: DebugMenuState, menuKey: String) {
         }
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             items(state.options[menuKey]!!) { option ->
-                when (option) {
-                    is Action -> ActionOption(option)
-                    is BooleanValue -> BooleanOption(option)
-                    is DoubleValue -> DoubleOption(option)
-                    is IntValue -> IntOption(option)
-                    is LongValue -> LongOption(option)
-                    is OptionSelection -> OptionSelection(option)
-                    is TextDisplay -> TextOption(option)
+                if(option.isVisible) {
+                    when (option) {
+                        is Action -> ActionOption(option)
+                        is BooleanValue -> BooleanOption(option)
+                        is DoubleValue -> DoubleOption(option)
+                        is IntValue -> IntOption(option)
+                        is LongValue -> LongOption(option)
+                        is OptionSelection -> OptionSelection(option)
+                        is TextDisplay -> TextOption(option)
+                    }
                 }
             }
         }
