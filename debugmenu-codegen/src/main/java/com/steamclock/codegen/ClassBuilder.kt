@@ -20,32 +20,32 @@ internal class MenuClassBuilder(
                 is BooleanWrapper -> {
                     val toggle = option.toggle
                     val toggleText =
-                        "BooleanValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                        "BooleanValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue}, isVisible = ${toggle.isVisible})"
                     "DebugMenu.instance.addOptions(key, $toggleText)"
                 }
                 is DoubleWrapper -> {
                     val toggle = option.doubleValue
                     val toggleText =
-                        "DoubleValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                        "DoubleValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue}, isVisible = ${toggle.isVisible})"
                     "DebugMenu.instance.addOptions(key, $toggleText)"
                 }
                 is IntWrapper -> {
                     val toggle = option.intValue
                     val toggleText =
-                        "IntValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                        "IntValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue}, isVisible = ${toggle.isVisible})"
                     "DebugMenu.instance.addOptions(key, $toggleText)"
                 }
                 is LongWrapper -> {
                     val toggle = option.longValue
                     val toggleText =
-                        "LongValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue})"
+                        "LongValue(title = \"${toggle.title}\", key = \"${toggle.key}\", defaultValue = ${toggle.defaultValue}, isVisible = ${toggle.isVisible})"
                     "DebugMenu.instance.addOptions(key, $toggleText)"
                 }
                 is SelectionWrapper -> {
                     val selection = option.selectionValue
                     val options = selection.options.joinToString(",") { "\"$it\"" }
                     val text =
-                        "OptionSelection(title = \"${selection.title}\", key = \"${selection.key}\", options = listOf(${options}), defaultIndex = ${selection.defaultIndex})"
+                        "OptionSelection(title = \"${selection.title}\", key = \"${selection.key}\", options = listOf(${options}), defaultIndex = ${selection.defaultIndex}, isVisible = ${selection.isVisible})"
                     "DebugMenu.instance.addOptions(key, $text)"
                 }
                 is TextValueWrapper -> {

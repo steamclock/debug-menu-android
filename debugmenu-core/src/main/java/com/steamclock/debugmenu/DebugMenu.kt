@@ -59,6 +59,8 @@ class DebugMenu private constructor(private val code: String) {
                         }
                     }
                 }
+
+                is TextDisplay -> { /* no op */ }
             }
         }
     }

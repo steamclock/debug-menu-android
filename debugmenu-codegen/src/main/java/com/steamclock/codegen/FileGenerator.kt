@@ -19,9 +19,9 @@ internal data class IntWrapper(val intValue: IntValue): AnnotationWrapper()
 internal data class DoubleWrapper(val doubleValue: DoubleValue): AnnotationWrapper()
 internal data class LongWrapper(val longValue: LongValue): AnnotationWrapper()
 internal data class SelectionWrapper(val selectionValue: OptionSelection): AnnotationWrapper()
-internal data class ActionWrapper(val title: String, val functionName: String, val parentClass: String, val packageName: String, val isGlobal: Boolean): AnnotationWrapper()
-internal data class TextValueWrapper(val functionName: String, val parentClass: String, val packageName: String): AnnotationWrapper()
-internal data class SelectionProviderWrapper(val title: String, val key: String, val defaultIndex: Int? = null, val functionName: String, val parentClass: String, val packageName: String): AnnotationWrapper()
+internal data class ActionWrapper(val title: String, val functionName: String, val parentClass: String, val packageName: String, val isGlobal: Boolean, val isVisible: Boolean): AnnotationWrapper()
+internal data class TextValueWrapper(val functionName: String, val parentClass: String, val packageName: String, val isVisible: Boolean): AnnotationWrapper()
+internal data class SelectionProviderWrapper(val title: String, val key: String, val defaultIndex: Int? = null, val functionName: String, val parentClass: String, val packageName: String, val isVisible: Boolean): AnnotationWrapper()
 
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
@@ -90,7 +90,8 @@ class FileGenerator : AbstractProcessor() {
             val title = annotation.title
             val menuKey = annotation.menuKey
             val defaultValue = annotation.defaultValue
-            val toggleOption = BooleanValue(title, name, defaultValue)
+            val isVisible = annotation.isVisible
+            val toggleOption = BooleanValue(title, name, defaultValue, isVisible)
             addOptionToMenu(menuKey, BooleanWrapper(toggleOption))
         }
         if (result == false) return false
@@ -100,7 +101,8 @@ class FileGenerator : AbstractProcessor() {
             val title = annotation.title
             val menuKey = annotation.menuKey
             val defaultValue = annotation.defaultValue
-            val toggleOption = IntValue(title, name, defaultValue)
+            val isVisible = annotation.isVisible
+            val toggleOption = IntValue(title, name, defaultValue, isVisible)
             addOptionToMenu(menuKey, IntWrapper(toggleOption))
         }
         if (result == false) return false
@@ -110,7 +112,8 @@ class FileGenerator : AbstractProcessor() {
             val title = annotation.title
             val menuKey = annotation.menuKey
             val defaultValue = annotation.defaultValue
-            val toggleOption = DoubleValue(title, name, defaultValue)
+            val isVisible = annotation.isVisible
+            val toggleOption = DoubleValue(title, name, defaultValue, isVisible)
             addOptionToMenu(menuKey, DoubleWrapper(toggleOption))
         }
         if (result == false) return false
@@ -120,7 +123,8 @@ class FileGenerator : AbstractProcessor() {
             val title = annotation.title
             val menuKey = annotation.menuKey
             val defaultValue = annotation.defaultValue
-            val toggleOption = LongValue(title, name, defaultValue)
+            val isVisible = annotation.isVisible
+            val toggleOption = LongValue(title, name, defaultValue, isVisible)
             addOptionToMenu(menuKey, LongWrapper(toggleOption))
         }
         if (result == false) return false
@@ -131,11 +135,12 @@ class FileGenerator : AbstractProcessor() {
             val menuKey = annotation.menuKey
             val defaultValue = annotation.defaultIndex
             val options = annotation.options
+            val isVisible = annotation.isVisible
 
             // annotations can't include null, so we use -1 instead to represent the same state
             val correctedDefaultValue = if (defaultValue == -1) null else defaultValue
 
-            val toggleOption = OptionSelection(title, name, options.toList(), correctedDefaultValue)
+            val toggleOption = OptionSelection(title, name, options.toList(), correctedDefaultValue, isVisible)
             addOptionToMenu(menuKey, SelectionWrapper(toggleOption))
         }
         if (result == false) return false
@@ -147,7 +152,8 @@ class FileGenerator : AbstractProcessor() {
             val parentClass = element.enclosingElement.toString()
             val isGlobal = parentClass.endsWith("Kt")
             val packageName = parentClass.split(".").dropLast(1).joinToString(".")
-            addOptionToMenu(menuKey, ActionWrapper(title = title, functionName = functionName, parentClass = parentClass, isGlobal = isGlobal, packageName = packageName))
+            val isVisible = annotation.isVisible
+            addOptionToMenu(menuKey, ActionWrapper(title = title, functionName = functionName, parentClass = parentClass, isGlobal = isGlobal, packageName = packageName, isVisible = isVisible))
         }
         if (result == false) return false
 
@@ -156,7 +162,8 @@ class FileGenerator : AbstractProcessor() {
             val functionName = element.simpleName.toString()
             val parentClass = element.enclosingElement.toString()
             val packageName = parentClass.split(".").dropLast(1).joinToString(".")
-            addOptionToMenu(menuKey, TextValueWrapper(functionName = functionName, parentClass = parentClass, packageName = packageName))
+            val isVisible = annotation.isVisible
+            addOptionToMenu(menuKey, TextValueWrapper(functionName = functionName, parentClass = parentClass, packageName = packageName, isVisible = isVisible))
         }
         if (result == false) return false
 
@@ -167,13 +174,13 @@ class FileGenerator : AbstractProcessor() {
             val packageName = parentClass.split(".").dropLast(1).joinToString(".")
             val title = annotation.title
             val defaultValue = annotation.defaultIndex
-
+            val isVisible = annotation.isVisible
             // annotations can't include null, so we use -1 instead to represent the same state
             val correctedDefaultValue = if (defaultValue == -1) null else defaultValue
 
             addOptionToMenu(menuKey, SelectionProviderWrapper(
                 title = title, key = functionName, defaultIndex = correctedDefaultValue,
-                functionName = functionName, parentClass = parentClass, packageName = packageName))
+                functionName = functionName, parentClass = parentClass, packageName = packageName, isVisible = isVisible))
         }
         if (result == false) return false
 
