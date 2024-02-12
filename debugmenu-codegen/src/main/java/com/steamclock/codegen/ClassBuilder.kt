@@ -11,7 +11,7 @@ internal class MenuClassBuilder(
                 is ActionWrapper -> {
                     if (option.isGlobal) {
                         val actionText =
-                            "Action(title = \"${option.title}\", onClick = { ${option.functionName}() })"
+                            "Action(title = \"${option.title}\", onClick = { ${option.functionName}() }, isVisible = ${option.isVisible})"
                         "DebugMenu.instance.addOptions(key, $actionText)"
                     } else {
                         ""
@@ -174,7 +174,7 @@ internal class MenuClassBuilder(
                     """
             val ${it.functionName}Action = Action(title = "${it.title}", onClick = {
                 instance.${parentName}Ref?.get()?.${it.functionName}()
-            })
+            }, isVisible = ${it.isVisible})
             DebugMenu.instance.addOptions(key, ${it.functionName}Action)    
                     """
                 }
